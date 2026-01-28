@@ -1,4 +1,4 @@
-<div>
+<div wire:key="network-map-root">
     <div class="h-[calc(100vh-8rem)] flex flex-col">
         <div class="mb-4">
             <h2 class="text-2xl font-bold text-slate-800">Peta Sebaran</h2>
