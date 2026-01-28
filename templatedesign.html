@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>RT RW Net Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f3f4f6", // Slightly darker than white for contrast
+                        "background-dark": "#101922",
+                        "sidebar-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .sidebar-link {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .sidebar-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-link.active {
+            background-color: #137fec;
+            color: white;
+            box-shadow: 0 4px 12px rgba(19, 127, 236, 0.4);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white h-screen overflow-hidden flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-sidebar-dark h-full flex flex-col shrink-0 transition-all duration-300 z-20">
+        <!-- Logo Area -->
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary/20 p-2 rounded-lg">
+                    <span class="material-symbols-outlined text-primary text-2xl">router</span>
+                </div>
+                <div>
+                    <h1 class="text-white text-lg font-bold tracking-tight">RT RW Net</h1>
+                    <p class="text-slate-400 text-xs">Admin Panel</p>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-2">
+            <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+            <a class="sidebar-link active flex items-center gap-3 px-3 py-3 rounded-lg text-white group" href="#">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">group</span>
+                <span class="text-sm font-medium">Pelanggan</span>
+            </a>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">wifi</span>
+                <span class="text-sm font-medium">Paket Internet</span>
+            </a>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span
+                    class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">receipt_long</span>
+                <span class="text-sm font-medium">Billing</span>
+            </a>
+            <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Network</p>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">router</span>
+                <span class="text-sm font-medium">Router Mikrotik</span>
+            </a>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span
+                    class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">settings</span>
+                <span class="text-sm font-medium">Setting</span>
+            </a>
+            <a class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group"
+                href="#">
+                <span class="material-symbols-outlined text-[22px] text-slate-400 group-hover:text-white">tune</span>
+                <span class="text-sm font-medium">Konfigurasi</span>
+            </a>
+        </nav>
+        <!-- User Profile (Bottom) -->
+        <div class="p-4 border-t border-white/10">
+            <div
+                class="flex items-center gap-3 p-2 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer transition-colors">
+                <div class="size-9 rounded-full bg-cover bg-center" data-alt="Admin User Profile Picture"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA0IMFHVCVR3YDxg7NspGRzGRJHszmIWHZitwcO8nL8WwK_l5a2C5A9LwbwQXZPWgi_VyoQZjyczACjBc3Bv7jTfn0Q6epz-KzoC9CKUlnMZ4INANRrge2V3WRqQhEsFhRE4SUCOFdTqGG7C7qkWsUsGFjT9gFkYVg4oq7guqXAPs4fKrsFuObirjfk9DSriHTE6H3QK8OmN3mEeGvSWF8f3fAvVtmL1KRnXS1cYeT3ZexzFMIESCw86cDUVR1dlcJgMtgjjiB5QoL1');">
+                </div>
+                <div class="flex flex-col">
+                    <p class="text-white text-sm font-medium">Admin User</p>
+                    <p class="text-slate-400 text-xs">Super Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- Top Header -->
+        <header
+            class="h-20 bg-white dark:bg-[#1e293b] border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-8 shrink-0 z-10 sticky top-0">
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white">Dashboard Overview</h2>
+            <div class="flex items-center gap-4">
+                <!-- Search Bar -->
+                <div class="relative hidden md:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+                    <input
+                        class="pl-10 pr-4 py-2 w-64 rounded-lg bg-slate-100 dark:bg-slate-800 border-none text-sm focus:ring-2 focus:ring-primary text-slate-700 dark:text-white placeholder-slate-400 transition-all"
+                        placeholder="Search customers, invoices..." type="text" />
+                </div>
+                <button
+                    class="size-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white"></span>
+                </button>
+            </div>
+        </header>
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div
+                        class="bg-white dark:bg-[#1e293b] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg text-primary">
+                                <span class="material-symbols-outlined">group</span>
+                            </div>
+                            <span
+                                class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">+12%</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Total Customers</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">1,240</h3>
+                    </div>
+                    <!-- Card 2 -->
+                    <div
+                        class="bg-white dark:bg-[#1e293b] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg text-purple-600">
+                                <span class="material-symbols-outlined">wifi</span>
+                            </div>
+                            <span
+                                class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">+5%</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Active Users</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">1,180</h3>
+                    </div>
+                    <!-- Card 3 -->
+                    <div
+                        class="bg-white dark:bg-[#1e293b] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg text-green-600">
+                                <span class="material-symbols-outlined">payments</span>
+                            </div>
+                            <span
+                                class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">+8%</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Monthly Revenue</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Rp 45.0M</h3>
+                    </div>
+                    <!-- Card 4 -->
+                    <div
+                        class="bg-white dark:bg-[#1e293b] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg text-orange-600">
+                                <span class="material-symbols-outlined">pending_actions</span>
+                            </div>
+                            <span
+                                class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">-2%</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Pending Payments</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">15</h3>
+                    </div>
+                </div>
+                <!-- Charts Section -->
+                <div
+                    class="bg-white dark:bg-[#1e293b] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Revenue Overview</h3>
+                            <p class="text-sm text-slate-500">Income performance over the last 7 days</p>
+                        </div>
+                        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                            <button
+                                class="px-3 py-1 text-xs font-medium bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm rounded-md">Weekly</button>
+                            <button
+                                class="px-3 py-1 text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-white rounded-md">Monthly</button>
+                        </div>
+                    </div>
+                    <div class="w-full h-[300px] relative">
+                        <!-- Simulated Chart Area using the provided SVG component structure but styled -->
+                        <svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 1200 300"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#137fec" stop-opacity="0.2"></stop>
+                                    <stop offset="100%" stop-color="#137fec" stop-opacity="0"></stop>
+                                </lineargradient>
+                            </defs>
+                            <!-- Grid Lines -->
+                            <line stroke="#e2e8f0" stroke-width="1" x1="0" x2="1200" y1="299" y2="299"></line>
+                            <line stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1200" y1="225"
+                                y2="225"></line>
+                            <line stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1200" y1="150"
+                                y2="150"></line>
+                            <line stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1200" y1="75"
+                                y2="75"></line>
+                            <!-- Chart Path -->
+                            <path
+                                d="M0 250 C 100 240, 150 180, 200 190 S 300 120, 400 140 S 500 80, 600 90 S 700 160, 800 130 S 900 60, 1000 80 S 1100 40, 1200 50 L 1200 300 L 0 300 Z"
+                                fill="url(#chartGradient)"></path>
+                            <path
+                                d="M0 250 C 100 240, 150 180, 200 190 S 300 120, 400 140 S 500 80, 600 90 S 700 160, 800 130 S 900 60, 1000 80 S 1100 40, 1200 50"
+                                fill="none" stroke="#137fec" stroke-linecap="round" stroke-width="3"></path>
+                            <!-- Data Points -->
+                            <circle cx="200" cy="190" fill="#ffffff" r="4" stroke="#137fec" stroke-width="2"></circle>
+                            <circle cx="400" cy="140" fill="#ffffff" r="4" stroke="#137fec" stroke-width="2"></circle>
+                            <circle cx="600" cy="90" fill="#ffffff" r="4" stroke="#137fec" stroke-width="2"></circle>
+                            <circle cx="800" cy="130" fill="#ffffff" r="4" stroke="#137fec" stroke-width="2"></circle>
+                            <circle cx="1000" cy="80" fill="#ffffff" r="4" stroke="#137fec" stroke-width="2"></circle>
+                        </svg>
+                        <!-- X Axis Labels -->
+                        <div class="flex justify-between mt-2 px-2 text-xs font-medium text-slate-400">
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu</span>
+                            <span>Fri</span>
+                            <span>Sat</span>
+                            <span>Sun</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Transactions Table -->
+                <div
+                    class="bg-white dark:bg-[#1e293b] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+                    <div
+                        class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-white">Recent Transactions</h3>
+                        <a class="text-sm text-primary font-medium hover:underline" href="#">View All</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead
+                                class="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-800 dark:text-slate-400">
+                                <tr>
+                                    <th class="px-6 py-3" scope="col">Customer Name</th>
+                                    <th class="px-6 py-3" scope="col">Package</th>
+                                    <th class="px-6 py-3" scope="col">Date</th>
+                                    <th class="px-6 py-3" scope="col">Amount</th>
+                                    <th class="px-6 py-3" scope="col">Status</th>
+                                    <th class="px-6 py-3 text-right" scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <tr
+                                    class="bg-white dark:bg-[#1e293b] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white flex items-center gap-3">
+                                        <div class="size-8 rounded-full bg-slate-200 bg-cover"
+                                            data-alt="Customer Avatar"
+                                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6qAxioJdNcU-9Md1Lx_epNIg0kBpV6KrDO6pxa-Bu1-0uejhfXYACGTr6yTZ1ynFQU1pE3bXuw0NSbU2FafiGYIyQmNZXagVgvC8Vuvu5IzDaPaNYLmgAvsuacE-IRkH_Q13R9djNQAw2oijN6TA_HLamH99Tto-zsXjccAAn17N_zq0SDaWU8U3qNer7EHH83cULBtleowj2gwfIPntTn7A62QNeKPK8gKNnmecSOCBmB0C2Bej4g_4cw8eTjenU8x0Amt6iM-Hu');">
+                                        </div>
+                                        Budi Santoso
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Home Fiber 20Mbps</td>
+                                    <td class="px-6 py-4 text-slate-500">Oct 24, 2023</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">Rp 250.000</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                            <span class="text-green-600 font-medium">Paid</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="bg-white dark:bg-[#1e293b] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white flex items-center gap-3">
+                                        <div class="size-8 rounded-full bg-slate-200 bg-cover"
+                                            data-alt="Customer Avatar"
+                                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDPr4fwvFkchUVo2SeJ_BAyL4y5HvrtiK9tSeU7jHEXNZHLLRI_NZ_1_7OsfhCvGizyXsqRS6tRF6NkVN_ORkTwRz563lDCRbjSfoZtFOpWctztG8mjI2Xpah-TOfcNgafYBru7iMPMdoN0dPEbFTdtuqRgslu4NDGb8oX9k19UtRyGXt_FgNglXXLIqmd0qbUu34kAROT0da0OeDmuzRnqD-sNsPx-fHDw58v1DpsHSw9U0_OJflKDQjhqWqlxGcnzM64QQvHwJd27');">
+                                        </div>
+                                        Siti Aminah
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Business Pro 50Mbps</td>
+                                    <td class="px-6 py-4 text-slate-500">Oct 24, 2023</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">Rp 550.000</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                            <span class="text-green-600 font-medium">Paid</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="bg-white dark:bg-[#1e293b] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white flex items-center gap-3">
+                                        <div class="size-8 rounded-full bg-slate-200 bg-cover"
+                                            data-alt="Customer Avatar"
+                                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9AQWVvAnPON7NTjSNd1NFtoGxpp4GXSXftx5Xj10yBtyV8bhIZPmh8pB3MWoVKn_Dttu48VgcgjFK4dQBaUg60sWLqyH7MT9SUM-RKHtpvEW5fwvPFOEvS4rQkXt_EOJB6JhswVa1iESj3LEHkeUnfb4Bd-1Vn0F2NO9twU0E6X4mEUpKyvuf-bb0tuYp8F9cGBl3euMVASOAl2GWogTgWvI55By9SPcsajiXAqrGLJQwVRJN3p9yaRebz1gltWBFgsUMHeiQMIER');">
+                                        </div>
+                                        Ahmad Dhani
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Home Fiber 10Mbps</td>
+                                    <td class="px-6 py-4 text-slate-500">Oct 23, 2023</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">Rp 150.000</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
+                                            <span class="text-yellow-600 font-medium">Pending</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="bg-white dark:bg-[#1e293b] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white flex items-center gap-3">
+                                        <div class="size-8 rounded-full bg-slate-200 bg-cover"
+                                            data-alt="Customer Avatar"
+                                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDPBo2efpREfX3Xmp5stfFWbDn3gBYYs_cu0WRlsGkDG4WmV4jA5oDCt0Nv9oRTnMDP978wSzysHyhAdEyYr5TuLDPiV-3mQ9QTkCsDzDvvE1ngnvG3dobg0trCozWzVS5BoSj-BadzTcY0sOjyn7DmAl8JaZSB7ah0FP0TFgi0fZ3N_demCvnOOkh9hpZ_y-ScO8l4wQlpWUOTbAeaxffA0u-AwrCpjkayEmAwdjmyaZHhN1x4CfzSDnJaBFm2RMYcCbHyrR-beVic');">
+                                        </div>
+                                        Rina Wati
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Home Fiber 20Mbps</td>
+                                    <td class="px-6 py-4 text-slate-500">Oct 23, 2023</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">Rp 250.000</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                            <span class="text-green-600 font-medium">Paid</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
