@@ -1,12 +1,14 @@
-<div class="h-[calc(100vh-8rem)] flex flex-col">
-    <div class="mb-4">
-        <h2 class="text-2xl font-bold text-slate-800">Peta Sebaran</h2>
-        <p class="text-sm text-slate-500">Lokasi Pelanggan dan ODP</p>
-    </div>
+<div>
+    <div class="h-[calc(100vh-8rem)] flex flex-col">
+        <div class="mb-4">
+            <h2 class="text-2xl font-bold text-slate-800">Peta Sebaran</h2>
+            <p class="text-sm text-slate-500">Lokasi Pelanggan dan ODP</p>
+        </div>
 
-    <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden z-0">
-        <div id="map" class="absolute inset-0 z-0" 
-             x-init="initLeafletMap($el, @js($customers), @js($odps))">
+        <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden z-0">
+            <div id="map" class="absolute inset-0 z-0" 
+                 x-init="initLeafletMap($el, @js($customers), @js($odps))">
+            </div>
         </div>
     </div>
 
