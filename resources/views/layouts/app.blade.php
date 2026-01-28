@@ -13,22 +13,40 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
-<body class="bg-background-light text-slate-800 h-screen overflow-hidden flex font-sans antialiased">
+<body class="bg-background-light text-slate-800 h-screen overflow-hidden flex font-sans antialiased" x-data="{ sidebarOpen: false }">
+    <!-- Mobile Sidebar Backdrop -->
+    <div x-show="sidebarOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click="sidebarOpen = false" 
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 lg:hidden"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-sidebar-dark h-full flex flex-col shrink-0 transition-all duration-300 z-20">
+    <aside class="fixed inset-y-0 left-0 w-64 bg-sidebar-dark h-full flex flex-col shrink-0 transition-transform duration-300 z-40 lg:relative lg:translate-x-0"
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
         <!-- Sidebar Header -->
-        <div class="h-20 flex items-center gap-3 px-6 border-b border-primary-600/30 mb-4">
-            <div class="bg-white/10 p-2 rounded-lg backdrop-blur-sm">
-                @if(isset($appSettings['app_logo']))
-                    <img src="{{ $appSettings['app_logo'] }}" class="h-8 w-8 object-contain">
-                @else
-                    <span class="material-symbols-outlined text-white text-2xl">router</span>
-                @endif
+        <div class="h-20 flex items-center justify-between px-6 border-b border-primary-600/30 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 p-2 rounded-lg backdrop-blur-sm">
+                    @if(isset($appSettings['app_logo']))
+                        <img src="{{ $appSettings['app_logo'] }}" class="h-8 w-8 object-contain">
+                    @else
+                        <span class="material-symbols-outlined text-white text-2xl">router</span>
+                    @endif
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wide text-white">{{ $appSettings['app_name'] ?? 'Billing App' }}</h1>
+                    <p class="text-[10px] text-white/70 uppercase tracking-widest">{{ $appSettings['company_name'] ?? 'Networking' }}</p>
+                </div>
             </div>
-            <div>
-                <h1 class="font-bold text-lg tracking-wide text-white">{{ $appSettings['app_name'] ?? 'Billing App' }}</h1>
-                <p class="text-[10px] text-white/70 uppercase tracking-widest">{{ $appSettings['company_name'] ?? 'Networking' }}</p>
-            </div>
+            <!-- Close button for mobile -->
+            <button @click="sidebarOpen = false" class="lg:hidden text-white/70 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
         </div>
         
         <!-- Navigation -->
@@ -48,7 +66,7 @@
             </a>
 
             <!-- Layanan Dropdown -->
-            <div x-data="{ open: {{ request()->is('packages*', 'routers*', 'radius*') ? 'true' : 'false' }} }">
+            <div x-data="{ open: {{ request()->is('packages*', 'routers*', 'radius*', 'monitoring/traffic*', 'network/map*', 'network/olt*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">wifi_tethering</span>
@@ -161,19 +179,27 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
         <!-- Top Header -->
-        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 z-10 sticky top-0">
-            @if(($title ?? 'Dashboard') === 'Dashboard')
-                <div class="flex flex-col justify-center">
-                    <h2 class="text-xl font-bold text-slate-800 leading-tight">{{ $appSettings['company_name'] ?? 'Billing System' }}</h2>
-                    <p class="text-xs text-slate-500">{{ $appSettings['company_address'] ?? '' }}</p>
-                </div>
-            @else
-                <h2 class="text-xl font-bold text-slate-800">{{ $title }}</h2>
-            @endif
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shrink-0 z-10 sticky top-0">
             <div class="flex items-center gap-4">
-                <div class="relative hidden md:block">
+                <!-- Hamburger Button -->
+                <button @click="sidebarOpen = true" class="p-2 -ml-2 text-slate-500 hover:text-primary lg:hidden rounded-lg hover:bg-slate-100 transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+
+                @if(($title ?? 'Dashboard') === 'Dashboard')
+                    <div class="flex flex-col justify-center">
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 leading-tight truncate max-w-[150px] md:max-w-none">{{ $appSettings['company_name'] ?? 'Billing System' }}</h2>
+                        <p class="text-[10px] md:text-xs text-slate-500 truncate max-w-[150px] md:max-w-none">{{ $appSettings['company_address'] ?? '' }}</p>
+                    </div>
+                @else
+                    <h2 class="text-lg md:text-xl font-bold text-slate-800 truncate">{{ $title }}</h2>
+                @endif
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-4">
+                <div class="relative hidden xl:block">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
                     <input class="pl-10 pr-4 py-2 w-64 rounded-lg bg-slate-100 border-none text-sm focus:ring-2 focus:ring-primary text-slate-700 placeholder-slate-400 transition-all" placeholder="Cari data..." type="text" />
                 </div>
@@ -182,7 +208,7 @@
         </header>
 
         <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-[1200px] mx-auto">
                 {{ $slot }}
             </div>

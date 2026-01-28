@@ -4,8 +4,8 @@
             <h2 class="text-2xl font-bold text-slate-800">Manajemen Pengguna</h2>
             <p class="text-sm text-slate-500">Kelola akses admin dan operator sistem</p>
         </div>
-        <div>
-             <x-button label="Tambah User" icon="o-plus" class="btn-primary shadow-lg shadow-primary/20" wire:click="create" />
+        <div class="w-full sm:w-auto">
+             <x-button label="Tambah User" icon="o-plus" class="btn-primary shadow-lg shadow-primary/20 w-full sm:w-auto" wire:click="create" />
         </div>
     </div>
 

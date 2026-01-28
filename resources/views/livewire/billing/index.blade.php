@@ -5,18 +5,19 @@
             <h2 class="text-2xl font-bold text-slate-800">Tagihan & Penagihan</h2>
             <p class="text-sm text-slate-500">Pantau status pembayaran dan kelola invoice pelanggan</p>
         </div>
-        <div class="flex flex-wrap gap-3">
-             <div class="relative">
+        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
+             <div class="relative w-full sm:w-auto">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
                 <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari invoice atau nama..." 
-                    class="pl-10 pr-4 py-2 w-64 rounded-lg bg-white border border-slate-200 text-sm focus:ring-2 focus:ring-primary focus:border-primary text-slate-700 transition-all shadow-sm">
+                    class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-lg bg-white border border-slate-200 text-sm focus:ring-2 focus:ring-primary focus:border-primary text-slate-700 transition-all shadow-sm">
              </div>
         </div>
     </div>
 
     <!-- Table Section -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <x-table :headers="$headers" :rows="$invoices" with-pagination class="text-sm">
+        <div class="overflow-x-auto">
+            <x-table :headers="$headers" :rows="$invoices" with-pagination class="text-sm min-w-[800px] sm:min-w-full">
             @scope('header_id', $header)
                 <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ $header['label'] }}</span>
             @endscope

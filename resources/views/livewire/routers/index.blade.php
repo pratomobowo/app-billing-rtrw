@@ -5,12 +5,13 @@
             <h2 class="text-2xl font-bold text-slate-800">Router Mikrotik</h2>
             <p class="text-sm text-slate-500">Kelola koneksi ke router Mikrotik Anda</p>
         </div>
-        <x-button label="Tambah Router" icon="o-plus" class="btn-primary shadow-lg shadow-primary/20" wire:click="create" />
+        <x-button label="Tambah Router" icon="o-plus" class="btn-primary shadow-lg shadow-primary/20 w-full sm:w-auto" wire:click="create" />
     </div>
 
     <!-- Table Section -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <x-table :headers="$headers" :rows="$routers" with-pagination class="text-sm">
+        <div class="overflow-x-auto">
+            <x-table :headers="$headers" :rows="$routers" with-pagination class="text-sm min-w-[700px] sm:min-w-full">
             @scope('cell_name', $router)
                 <div class="flex items-center gap-3">
                     <div class="bg-slate-100 p-2 rounded-lg text-slate-500">
