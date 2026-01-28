@@ -12,8 +12,9 @@
         </div>
     </div>
 
+    @script
     <script>
-        function initLeafletMap(el, customers, odps) {
+        window.initLeafletMap = function(el, customers, odps) {
             if (window.leafletMap) { 
                 window.leafletMap.remove(); 
                 window.leafletMap = null;
@@ -84,4 +85,5 @@
             }
         }
     </script>
+    @endscript
 </div>
