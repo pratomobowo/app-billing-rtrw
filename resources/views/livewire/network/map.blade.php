@@ -21,14 +21,14 @@
     @script
     <script>
         // Init Map
-        const map = L.map('map').setView([-6.200000, 106.816666], 13); // Default Jakarta
+        var map = L.map('map').setView([-6.200000, 106.816666], 13); // Default Jakarta
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
         // Icons
-        const customerIcon = L.divIcon({
+        var customerIcon = L.divIcon({
             html: '<span class="material-symbols-outlined text-blue-600 text-3xl drop-shadow-md">person_pin_circle</span>',
             className: 'bg-transparent',
             iconSize: [30, 30],
@@ -36,7 +36,7 @@
             popupAnchor: [0, -30]
         });
 
-        const odpIcon = L.divIcon({
+        var odpIcon = L.divIcon({
             html: '<span class="material-symbols-outlined text-red-600 text-3xl drop-shadow-md">router</span>',
             className: 'bg-transparent',
             iconSize: [30, 30],
@@ -45,12 +45,12 @@
         });
 
         // Customers
-        const customers = @json($customers);
-        const odps = @json($odps);
-        const bounds = L.latLngBounds();
+        var customers = @json($customers);
+        var odps = @json($odps);
+        var bounds = L.latLngBounds();
 
         customers.forEach(c => {
-            const marker = L.marker([c.latitude, c.longitude], {icon: customerIcon}).addTo(map);
+            var marker = L.marker([c.latitude, c.longitude], {icon: customerIcon}).addTo(map);
             marker.bindPopup(`
                 <div class="p-2 min-w-[200px]">
                     <h3 class="font-bold text-slate-800">${c.name}</h3>
@@ -68,7 +68,7 @@
 
         // ODPs
         odps.forEach(o => {
-            const marker = L.marker([o.latitude, o.longitude], {icon: odpIcon}).addTo(map);
+            var marker = L.marker([o.latitude, o.longitude], {icon: odpIcon}).addTo(map);
             marker.bindPopup(`
                 <div class="p-2 min-w-[200px]">
                     <h3 class="font-bold text-slate-800">${o.name}</h3>
