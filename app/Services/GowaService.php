@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\GowaDevice;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Exception;
 
@@ -13,8 +14,8 @@ class GowaService
     // Default public server or from config
     public function __construct()
     {
-        // Hardcoded for now, or move to setting
-        $this->baseUrl = 'https://wa.wiku.my.id'; 
+        // Fetch from setting, default to public server if not set
+        $this->baseUrl = Setting::getValue('gowa_url', 'https://wa.wiku.my.id'); 
     }
 
     protected function headers(GowaDevice $device)

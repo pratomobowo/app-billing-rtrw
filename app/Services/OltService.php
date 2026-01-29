@@ -13,14 +13,15 @@ class OltService
      */
     public function checkSignal(Olt $olt, string $serialNumber): ?float
     {
+        // TODO: Implement real OLT Driver based on $olt->type (ZTE, Huawei, etc.)
+        // This usually requires Telnet/SSH or SNMP interaction.
+        // For now, this returns a simulated signal for UI demonstration.
+        
         // Mock Implementation
         // Simulate Telnet/SNMP connection delay
         sleep(1);
 
         // Return random signal between -15.00 and -32.00
-        // -15 to -24 is Good
-        // -24 to -27 is Warning
-        // < -27 is Bad/LOS
         return rand(-3200, -1500) / 100;
     }
 

@@ -25,18 +25,35 @@ class RadiusService
             );
 
             // 2. Set User Group
-            // Remove old group first to avoid duplicates if user changes package
-            RadUserGroup::where('username', $username)->delete();
-            RadUserGroup::create([
-                'username' => $username,
-                'groupname' => $groupName,
-                'priority' => 1
-            ]);
+            RadUserGroup::updateOrCreate(
+                ['username' => $username],
+                ['groupname' => $groupName, 'priority' => 1]
+            );
 
             DB::commit();
             return true;
         } catch (Exception $e) {
             DB::rollBack();
+            Log::error("Radius Sync User Failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Create or update a group in Radius with bandwidth limits.
+     */
+    public function syncGroup(string $groupName, string $bandwidthLimit): bool
+    {
+        try {
+            // Set Mikrotik-Rate-Limit in radgroupreply
+            RadGroupReply::updateOrCreate(
+                ['groupname' => $groupName, 'attribute' => 'Mikrotik-Rate-Limit'],
+                ['op' => ':=', 'value' => $bandwidthLimit]
+            );
+
+            return true;
+        } catch (Exception $e) {
+            Log::error("Radius Sync Group Failed: " . $e->getMessage());
             return false;
         }
     }
@@ -62,7 +79,8 @@ class RadiusService
     public function setUserStatus(string $username, string $status, string $activeGroup): bool
     {
         try {
-            $groupName = ($status === 'isolated') ? 'ISOLATED' : $activeGroup;
+            $isolatedGroup = Setting::getValue('radius_isolated_group', 'ISOLATED');
+            $groupName = ($status === 'isolated') ? $isolatedGroup : $activeGroup;
 
             RadUserGroup::where('username', $username)->delete();
             RadUserGroup::create([
