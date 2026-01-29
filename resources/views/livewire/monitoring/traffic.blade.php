@@ -65,10 +65,10 @@
 
     @script
     <script>
-        var ctx = document.getElementById('trafficChart');
+        const ctx = document.getElementById('trafficChart');
         
         // Init Chart using Chart.js
-        var trafficChart = new Chart(ctx, {
+        const trafficChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
@@ -111,8 +111,7 @@
         });
 
         // Listen for updates from Livewire
-        Livewire.on('traffic-update', (data) => {
-            var raw = data[0]; 
+        $wire.on('traffic-update', (raw) => {
             // Add new data
             trafficChart.data.labels.push(raw.label);
             trafficChart.data.datasets[0].data.push(raw.rx);
