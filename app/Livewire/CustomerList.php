@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Customer;
 use App\Models\Router;
 use App\Models\Package;
+use App\Models\Setting;
 use App\Services\RadiusService;
 use App\Services\MikrotikService;
 use Livewire\WithPagination;
