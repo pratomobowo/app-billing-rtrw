@@ -101,7 +101,7 @@
             <div class="col-span-1 md:col-span-2">
                 <h3 class="font-bold text-slate-700 mb-2 border-b pb-1">Data Diri</h3>
             </div>
-            <x-input label="Nama Lengkap" wire:model="name" placeholder="John Doe" />
+            <x-input label="Nama Lengkap" wire:model.live="name" placeholder="John Doe" />
             <x-input label="No. WhatsApp" wire:model="whatsapp" placeholder="08123456789" hint="Wajib aktif untuk notifikasi" />
             <div class="col-span-1 md:col-span-2">
                 <x-textarea label="Alamat Pemasangan" wire:model="address" placeholder="Jalan Mawar No. 12..." rows="2" />
@@ -139,9 +139,7 @@
                 </div>
             @endif
 
-             <div class="col-span-1 md:col-span-2">
-                <x-toggle label="Status Aktif" wire:model="status" true-value="active" false-value="isolated" class="text-sm" />
-            </div>
+
         </div>
  
         <x-slot:actions>

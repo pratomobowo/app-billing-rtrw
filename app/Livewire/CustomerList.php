@@ -10,6 +10,7 @@ use App\Services\RadiusService;
 use App\Services\MikrotikService;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
+use Illuminate\Support\Str;
 
 class CustomerList extends Component
 {
@@ -33,9 +34,21 @@ class CustomerList extends Component
     public $latitude;
     public $longitude;
 
+    public function updatedName($value)
+    {
+        // Only auto-fill if we are creating a new customer
+        if (!$this->editingCustomer) {
+            $this->pppoe_user = Str::lower(Str::slug($value, '_'));
+        }
+    }
+
     public function create()
     {
         $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude']);
+        
+        // Generate random 6-character password for new customer
+        $this->pppoe_pass = Str::random(6);
+        
         $this->customerModal = true;
     }
 
