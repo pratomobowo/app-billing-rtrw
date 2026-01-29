@@ -13,12 +13,9 @@ class MikrotikService
      */
     public function kickUser(Router $router, string $username): bool
     {
-        // In a real scenario, use RouterOS-API to disconnect.
-        // For development/demo without real router, we log it.
-        
+        // ... (existing implementation)
         Log::info("Mikrotik: Kicking user {$username} from router {$router->name} ({$router->ip_address})");
 
-        /* Real Implementation Logic:
         try {
             $client = new \RouterOS\Client([
                 'host' => $router->ip_address,
@@ -27,7 +24,6 @@ class MikrotikService
                 'port' => $router->port ?? 8728,
             ]);
 
-            // Find PPPoE active session
             $request = new \RouterOS\Request('/ppp/active/print');
             $request->setQuery(\RouterOS\Query::where('name', $username));
             $responses = $client->sendSync($request);
@@ -36,7 +32,6 @@ class MikrotikService
                 if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
                     $id = $response->getArgument('.id');
                     
-                    // Remove the session
                     $removeRequest = new \RouterOS\Request('/ppp/active/remove');
                     $removeRequest->setArgument('.id', $id);
                     $client->sendSync($removeRequest);
@@ -48,8 +43,40 @@ class MikrotikService
             Log::error("Mikrotik Kick Failed: " . $e->getMessage());
             return false;
         }
-        */
 
         return true;
+    }
+
+    /**
+     * Test connection to Mikrotik router and get basic system info.
+     */
+    public function testConnection(string $host, string $user, string $pass, int $port = 8728): ?array
+    {
+        try {
+            $client = new \RouterOS\Client([
+                'host' => $host,
+                'user' => $user,
+                'pass' => $pass,
+                'port' => $port,
+            ]);
+
+            $request = new \RouterOS\Request('/system/resource/print');
+            $responses = $client->sendSync($request);
+
+            foreach ($responses as $response) {
+                if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
+                    return [
+                        'board-name' => $response->getArgument('board-name'),
+                        'version'    => $response->getArgument('version'),
+                        'cpu-load'   => $response->getArgument('cpu-load'),
+                        'uptime'     => $response->getArgument('uptime'),
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            Log::error("Mikrotik Connection Test Failed: " . $e->getMessage());
+        }
+
+        return null;
     }
 }
