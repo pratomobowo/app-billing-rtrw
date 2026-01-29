@@ -14,17 +14,6 @@ class TrafficService
      */
     public function getInterfaceTraffic(Router $router, string $interface): array
     {
-        // In a real scenario, use RouterOS-API to connect.
-        // For development/demo without real router, return mock data.
-        
-        // Mock Data Simulation
-        // Simulating random traffic between 1Mbps and 50Mbps
-        return [
-            'rx' => rand(1000000, 50000000), // Random 1-50 Mbps
-            'tx' => rand(500000, 20000000),  // Random 0.5-20 Mbps
-        ];
-
-        /* Real Implementation Logic:
         try {
             $config = new \RouterOS\Config([
                 'host' => $router->ip_address,
@@ -49,9 +38,9 @@ class TrafficService
             }
         } catch (Exception $e) {
             Log::error("Traffic Monitor Failed: " . $e->getMessage());
-            return ['rx' => 0, 'tx' => 0];
         }
-        */
+
+        return ['rx' => 0, 'tx' => 0];
     }
 
     /**
@@ -59,12 +48,31 @@ class TrafficService
      */
     public function getInterfaces(Router $router): array
     {
-        // Mock Interfaces
-        return [
-            ['name' => 'ether1-gateway', 'type' => 'ether'],
-            ['name' => 'ether2-lan', 'type' => 'ether'],
-            ['name' => 'wlan1', 'type' => 'wlan'],
-            ['name' => 'pppoe-out1', 'type' => 'pppoe-out'],
-        ];
+        try {
+            $config = new \RouterOS\Config([
+                'host' => $router->ip_address,
+                'user' => $router->username,
+                'pass' => $router->password,
+                'port' => $router->port ?? 8728,
+            ]);
+            $client = new \RouterOS\Client($config);
+
+            $query = new \RouterOS\Query('/interface/print');
+            $responses = $client->query($query)->read();
+
+            $interfaces = [];
+            foreach ($responses as $response) {
+                if (isset($response['name'])) {
+                    $interfaces[] = [
+                        'name' => $response['name'],
+                        'type' => $response['type'] ?? 'unknown'
+                    ];
+                }
+            }
+            return $interfaces;
+        } catch (Exception $e) {
+            Log::error("Get Interfaces Failed: " . $e->getMessage());
+            return [];
+        }
     }
 }
