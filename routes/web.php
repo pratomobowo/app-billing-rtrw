@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/routers', RouterIndex::class);
     Route::get('/radius', RadiusIndex::class);
     Route::get('/monitoring/traffic', \App\Livewire\Monitoring\Traffic::class);
+    Route::get('/hotspot/vouchers', \App\Livewire\Hotspot\VoucherGenerator::class);
+    Route::get('/hotspot/profiles', \App\Livewire\Hotspot\VoucherProfiles::class);
     Route::get('/network/map', \App\Livewire\Network\Map::class);
     Route::get('/network/olt', \App\Livewire\Network\Olt\Index::class);
     Route::get('/whatsapp', \App\Livewire\Whatsapp\Index::class);

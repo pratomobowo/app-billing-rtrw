@@ -96,6 +96,25 @@
                 </div>
             </div>
 
+            <!-- Hotspot Dropdown -->
+            <div x-data="{ open: {{ request()->is('hotspot*') ? 'true' : 'false' }} }">
+                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">magic_button</span>
+                        <span class="text-sm font-medium">Hotspot</span>
+                    </div>
+                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                </button>
+                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                    <a href="/hotspot/vouchers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/vouchers*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">confirmation_number</span> Voucher Hotspot
+                    </a>
+                    <a href="/hotspot/profiles" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/profiles*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">identity_platform</span> Profil Voucher
+                    </a>
+                </div>
+            </div>
+
             <!-- Keuangan Dropdown -->
             <div x-data="{ open: {{ request()->is('billing*', 'invoices*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
