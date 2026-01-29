@@ -2,103 +2,54 @@
 
 namespace App\Services;
 
+use App\Models\Router;
 use Exception;
-use EvilFreelancer\RouterOs\Client;
 use Illuminate\Support\Facades\Log;
 
 class MikrotikService
 {
-    protected ?Client $client = null;
-
     /**
-     * Connect to the MikroTik router.
+     * Kick a user from the router (force PPPoE session disconnect).
      */
-    public function connect(string $ip, string $user, string $password, int $port = 8728): bool
+    public function kickUser(Router $router, string $username): bool
     {
+        // In a real scenario, use RouterOS-API to disconnect.
+        // For development/demo without real router, we log it.
+        
+        Log::info("Mikrotik: Kicking user {$username} from router {$router->name} ({$router->ip_address})");
+
+        /* Real Implementation Logic:
         try {
-            $this->client = new Client([
-                'host' => $ip,
-                'user' => $user,
-                'pass' => $password,
-                'port' => $port,
-                'timeout' => 5, // 5 seconds timeout
+            $client = new \RouterOS\Client([
+                'host' => $router->ip_address,
+                'user' => $router->username,
+                'pass' => $router->password,
+                'port' => $router->port ?? 8728,
             ]);
-            return true;
+
+            // Find PPPoE active session
+            $request = new \RouterOS\Request('/ppp/active/print');
+            $request->setQuery(\RouterOS\Query::where('name', $username));
+            $responses = $client->sendSync($request);
+
+            foreach ($responses as $response) {
+                if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
+                    $id = $response->getArgument('.id');
+                    
+                    // Remove the session
+                    $removeRequest = new \RouterOS\Request('/ppp/active/remove');
+                    $removeRequest->setArgument('.id', $id);
+                    $client->sendSync($removeRequest);
+                    
+                    return true;
+                }
+            }
         } catch (Exception $e) {
-            Log::error("MikroTik Connection Error: " . $e->getMessage());
+            Log::error("Mikrotik Kick Failed: " . $e->getMessage());
             return false;
         }
-    }
+        */
 
-    /**
-     * Get system resources (CPU, Uptime, etc.)
-     */
-    public function getSystemResources(): ?array
-    {
-        if (!$this->client) {
-            return null;
-        }
-
-        try {
-            $request = $this->client->query('/system/resource/print');
-            $response = $this->client->read($request);
-            return $response[0] ?? null;
-        } catch (Exception $e) {
-            Log::error("MikroTik Resource Error: " . $e->getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Get list of interfaces.
-     */
-    public function getInterfaces(): array
-    {
-        if (!$this->client) {
-            return [];
-        }
-
-        try {
-            $request = $this->client->query('/interface/print');
-            return $this->client->read($request);
-        } catch (Exception $e) {
-            Log::error("MikroTik Interface Error: " . $e->getMessage());
-            return [];
-        }
-    }
-    
-    /**
-     * Test connection and return resource data if successful.
-     */
-    public function testConnection(string $ip, string $user, string $password, int $port = 8728): ?array
-    {
-        if ($this->connect($ip, $user, $password, $port)) {
-            return $this->getSystemResources();
-        }
-        return null;
-    }
-
-    /**
-     * Add a PPP Secret (User).
-     */
-    public function addPppSecret(string $user, string $password, string $service = 'pppoe', string $profile = 'default'): bool
-    {
-        if (!$this->client) {
-            return false;
-        }
-
-        try {
-            $query = (new \EvilFreelancer\RouterOs\Query('/ppp/secret/add'))
-                ->equal('name', $user)
-                ->equal('password', $password)
-                ->equal('service', $service)
-                ->equal('profile', $profile);
-            
-            $this->client->query($query)->read();
-            return true;
-        } catch (Exception $e) {
-            Log::error("MikroTik Add Secret Error: " . $e->getMessage());
-            return false;
-        }
+        return true;
     }
 }

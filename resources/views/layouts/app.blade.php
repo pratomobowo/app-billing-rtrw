@@ -147,8 +147,11 @@
                     <a href="/users" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('users*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">manage_accounts</span> Manajemen User
                     </a>
-                    <a href="/settings" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings*') ? 'text-white bg-white/5' : '' }}">
+                    <a href="/settings" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings*') && !request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">settings</span> Konfigurasi
+                    </a>
+                    <a href="/settings/docs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">menu_book</span> Dokumentasi
                     </a>
                 </div>
             </div>

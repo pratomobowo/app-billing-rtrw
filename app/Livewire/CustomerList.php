@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Router;
 use App\Models\Package;
 use App\Services\RadiusService;
+use App\Services\MikrotikService;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
@@ -56,7 +57,7 @@ class CustomerList extends Component
         $this->customerModal = true;
     }
 
-    public function save(RadiusService $radiusService)
+    public function save(RadiusService $radiusService, MikrotikService $mikrotikService)
     {
         $this->validate([
             'name' => 'required|string|max:255',
@@ -67,6 +68,9 @@ class CustomerList extends Component
             'pppoe_pass' => 'required_if:connection_type,pppoe|string',
             'due_date' => 'required|integer|min:1|max:31',
         ]);
+
+        $isNew = !$this->editingCustomer;
+        $oldStatus = $this->editingCustomer?->status;
 
         $data = [
             'name' => $this->name,
@@ -88,12 +92,23 @@ class CustomerList extends Component
             $data
         );
 
-        // Sync with Radius
+        // Sync with Radius & Router
         if ($this->connection_type === 'pppoe') {
             $package = Package::find($this->package_id);
             if ($package) {
-                // Radius Username = PPPoE User
+                // 1. Sync User Credentials
                 $radiusService->syncUser($this->pppoe_user, $this->pppoe_pass, $package->name);
+                
+                // 2. Sync Status (Isolated vs Active)
+                $radiusService->setUserStatus($this->pppoe_user, $this->status, $package->name);
+
+                // 3. Kick if status changed to apply immediately
+                if (!$isNew && $oldStatus !== $this->status) {
+                    $router = Router::find($this->router_id);
+                    if ($router) {
+                        $mikrotikService->kickUser($router, $this->pppoe_user);
+                    }
+                }
             }
         }
 

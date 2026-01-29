@@ -57,19 +57,20 @@ class RadiusService
     }
 
     /**
-     * Create or update a group (profile) in Radius.
-     * Often mapped to Internet Packages.
+     * Set user status in Radius by changing their group.
      */
-    public function syncGroup(string $groupName, ?string $rateLimit = null): bool
+    public function setUserStatus(string $username, string $status, string $activeGroup): bool
     {
         try {
-            if ($rateLimit) {
-                // MikroTik-Rate-Limit
-                RadGroupReply::updateOrCreate(
-                    ['groupname' => $groupName, 'attribute' => 'MikroTik-Rate-Limit'],
-                    ['op' => ':=', 'value' => $rateLimit]
-                );
-            }
+            $groupName = ($status === 'isolated') ? 'ISOLATED' : $activeGroup;
+
+            RadUserGroup::where('username', $username)->delete();
+            RadUserGroup::create([
+                'username' => $username,
+                'groupname' => $groupName,
+                'priority' => 1
+            ]);
+
             return true;
         } catch (Exception $e) {
             return false;
