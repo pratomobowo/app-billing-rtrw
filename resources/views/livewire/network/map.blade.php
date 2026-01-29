@@ -20,13 +20,24 @@
                 window.leafletMap = null;
             }
             
+            // Initial view
             window.leafletMap = L.map(el).setView([-6.200000, 106.816666], 13);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(window.leafletMap);
 
-            var customerIcon = L.divIcon({
+            // Fix for "gray bars" or "broken tiles"
+            // Leaflet needs a recalculation after the container is fully rendered
+            setTimeout(() => {
+                if (window.leafletMap) window.leafletMap.invalidateSize();
+            }, 500);
+
+            window.addEventListener('resize', () => {
+                if (window.leafletMap) window.leafletMap.invalidateSize();
+            });
+
+            const customerIcon = L.divIcon({
                 html: '<span class="material-symbols-outlined text-blue-600 text-3xl drop-shadow-md">person_pin_circle</span>',
                 className: 'bg-transparent',
                 iconSize: [30, 30],
@@ -34,7 +45,7 @@
                 popupAnchor: [0, -30]
             });
 
-            var odpIcon = L.divIcon({
+            const odpIcon = L.divIcon({
                 html: '<span class="material-symbols-outlined text-red-600 text-3xl drop-shadow-md">router</span>',
                 className: 'bg-transparent',
                 iconSize: [30, 30],
@@ -42,11 +53,11 @@
                 popupAnchor: [0, -30]
             });
 
-            var bounds = L.latLngBounds();
+            const bounds = L.latLngBounds();
 
             customers.forEach(c => {
                 if (c.latitude && c.longitude) {
-                    var marker = L.marker([c.latitude, c.longitude], {icon: customerIcon}).addTo(window.leafletMap);
+                    const marker = L.marker([c.latitude, c.longitude], {icon: customerIcon}).addTo(window.leafletMap);
                     marker.bindPopup(`
                         <div class="p-2 min-w-[200px]">
                             <h3 class="font-bold text-slate-800">${c.name}</h3>
@@ -65,7 +76,7 @@
 
             odps.forEach(o => {
                 if (o.latitude && o.longitude) {
-                    var marker = L.marker([o.latitude, o.longitude], {icon: odpIcon}).addTo(window.leafletMap);
+                    const marker = L.marker([o.latitude, o.longitude], {icon: odpIcon}).addTo(window.leafletMap);
                     marker.bindPopup(`
                         <div class="p-2 min-w-[200px]">
                             <h3 class="font-bold text-slate-800">${o.name}</h3>
