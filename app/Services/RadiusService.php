@@ -6,6 +6,8 @@ use App\Models\Radius\RadCheck;
 use App\Models\Radius\RadReply;
 use App\Models\Radius\RadUserGroup;
 use App\Models\Radius\RadGroupReply;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
