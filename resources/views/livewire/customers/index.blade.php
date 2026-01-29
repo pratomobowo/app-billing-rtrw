@@ -95,7 +95,7 @@
     </div>
 
     <!-- Customer Modal -->
-    <x-modal wire:model="customerModal" title="{{ $editingCustomer ? 'Edit Pelanggan' : 'Tambah Pelanggan Baru' }}" subtitle="Informasi pelanggan & koneksi" separator class="max-w-4xl">
+    <x-modal wire:model="customerModal" title="{{ $editingCustomer ? 'Edit Pelanggan' : 'Tambah Pelanggan Baru' }}" subtitle="Informasi pelanggan & koneksi" separator class="w-11/12 max-w-5xl">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Personal Info -->
             <div class="col-span-1 md:col-span-3">
