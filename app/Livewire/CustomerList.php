@@ -115,10 +115,23 @@ class CustomerList extends Component
                 // 2. Sync Status (Isolated vs Active)
                 $radiusService->setUserStatus($this->pppoe_user, $this->status, $package->name);
 
-                // 3. Kick if status changed to apply immediately
-                if (!$isNew && $oldStatus !== $this->status) {
-                    $router = Router::find($this->router_id);
-                    if ($router) {
+                // 3. Sync to Router local PPP
+                $router = Router::find($this->router_id);
+                if ($router) {
+                    // Decide profile based on status
+                    $isolatedGroup = Setting::getValue('radius_isolated_group', 'ISOLATED');
+                    $profile = ($this->status === 'isolated') ? $isolatedGroup : $package->name;
+
+                    $mikrotikService->syncPppoeUser(
+                        $router,
+                        $this->pppoe_user,
+                        $this->pppoe_pass,
+                        $profile,
+                        "Customer: " . $this->name
+                    );
+
+                    // 4. Kick if status changed to apply immediately
+                    if (!$isNew && $oldStatus !== $this->status) {
                         $mikrotikService->kickUser($router, $this->pppoe_user);
                     }
                 }
@@ -129,10 +142,15 @@ class CustomerList extends Component
         $this->customerModal = false;
     }
     
-    public function delete(Customer $customer, RadiusService $radiusService)
+    public function delete(Customer $customer, RadiusService $radiusService, MikrotikService $mikrotikService)
     {
         // Remove from Radius
         $radiusService->deleteUser($customer->pppoe_user);
+        
+        // Remove from Router
+        if ($customer->router) {
+            $mikrotikService->deletePppoeUser($customer->router, $customer->pppoe_user);
+        }
         
         $customer->delete();
         $this->success('Pelanggan berhasil dihapus');

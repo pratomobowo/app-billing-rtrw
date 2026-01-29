@@ -3,7 +3,10 @@
 namespace App\Livewire\Packages;
 
 use App\Models\Package;
+use App\Models\Router;
+use App\Models\Setting;
 use App\Services\RadiusService;
+use App\Services\MikrotikService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
@@ -47,7 +50,7 @@ class Index extends Component
         $this->packageModal = true;
     }
 
-    public function save(RadiusService $radiusService)
+    public function save(RadiusService $radiusService, MikrotikService $mikrotikService)
     {
         $this->validate([
             'name' => 'required|string|max:255',
@@ -66,10 +69,21 @@ class Index extends Component
             ]
         );
 
-        // Sync to Radius
-        // Convert bandwidth limit (e.g., 10M/10M) to Mikrotik-Rate-Limit format if needed, 
-        // or just pass it directly if it matches.
+        // 1. Sync to Radius
         $radiusService->syncGroup($this->name, $this->bandwidth_limit);
+
+        // 2. Sync to all Routers (PPP Profile)
+        $routers = Router::all();
+        foreach ($routers as $router) {
+            $mikrotikService->syncPppoeProfile($router, $this->name, $this->bandwidth_limit);
+        }
+
+        // 3. Also sync Isolated Group Profile to all routers if it doesn't exist
+        $isolatedName = Setting::getValue('radius_isolated_group', 'ISOLATED');
+        foreach ($routers as $router) {
+            // Give isolated group a very low limit if not specified, e.g., 128k/128k
+            $mikrotikService->syncPppoeProfile($router, $isolatedName, '128k/128k');
+        }
 
         $this->success($this->editingPackage ? 'Paket berhasil diperbarui' : 'Paket berhasil ditambahkan');
         $this->packageModal = false;
