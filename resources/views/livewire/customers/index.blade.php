@@ -95,42 +95,44 @@
     </div>
 
     <!-- Customer Modal -->
-    <x-modal wire:model="customerModal" title="{{ $editingCustomer ? 'Edit Pelanggan' : 'Tambah Pelanggan Baru' }}" subtitle="Informasi pelanggan & koneksi" separator>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <x-modal wire:model="customerModal" title="{{ $editingCustomer ? 'Edit Pelanggan' : 'Tambah Pelanggan Baru' }}" subtitle="Informasi pelanggan & koneksi" separator class="max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Personal Info -->
-            <div class="col-span-1 md:col-span-2">
+            <div class="col-span-1 md:col-span-3">
                 <h3 class="font-bold text-slate-700 mb-2 border-b pb-1">Data Diri</h3>
             </div>
-            <x-input label="Nama Lengkap" wire:model.live="name" placeholder="John Doe" />
-            <x-input label="No. WhatsApp" wire:model="whatsapp" placeholder="08123456789" hint="Wajib aktif untuk notifikasi" />
             <div class="col-span-1 md:col-span-2">
+                <x-input label="Nama Lengkap" wire:model.live="name" placeholder="John Doe" />
+            </div>
+            <div class="col-span-1 md:col-span-1">
+                <x-input label="No. WhatsApp" wire:model="whatsapp" placeholder="08123456789" hint="Wajib aktif untuk notifikasi" />
+            </div>
+            <div class="col-span-1 md:col-span-3">
                 <x-textarea label="Alamat Pemasangan" wire:model="address" placeholder="Jalan Mawar No. 12..." rows="2" />
             </div>
 
             <!-- Connection Info -->
-            <div class="col-span-1 md:col-span-2 mt-2">
+            <div class="col-span-1 md:col-span-3 mt-2">
                 <h3 class="font-bold text-slate-700 mb-2 border-b pb-1">Koneksi & Layanan</h3>
             </div>
             
             <x-select label="Pilih Router" wire:model="router_id" :options="$routers" option-label="name" option-value="id" placeholder="-- Pilih Router --" />
             <x-select label="Pilih Paket" wire:model="package_id" :options="$packages" option-label="name" option-value="id" placeholder="-- Pilih Paket --" />
+            <x-select label="Status" wire:model="status" :options="[
+                ['id' => 'active', 'name' => 'Active'],
+                ['id' => 'isolated', 'name' => 'Isolated'],
+            ]" option-label="name" option-value="id" />
+
+            <x-select label="Tipe Koneksi" wire:model="connection_type" :options="[['id'=>'pppoe','name'=>'PPPoE'],['id'=>'hotspot','name'=>'Hotspot (Voucher)'],['id'=>'static','name'=>'Static IP']]" option-label="name" option-value="id" />
+            <x-input label="Jatuh Tempo (Tgl)" wire:model="due_date" type="number" min="1" max="31" suffix="Setiap Bulan" />
             <div class="grid grid-cols-2 gap-4">
                 <x-input label="Latitude" wire:model="latitude" placeholder="-6.200000" />
                 <x-input label="Longitude" wire:model="longitude" placeholder="106.816666" />
             </div>
 
-            <x-select label="Status" wire:model="status" :options="[
-                ['id' => 'active', 'name' => 'Active'],
-                ['id' => 'isolated', 'name' => 'Isolated'],
-            ]" option-label="name" option-value="id" />
-            
-            <x-select label="Tipe Koneksi" wire:model="connection_type" :options="[['id'=>'pppoe','name'=>'PPPoE'],['id'=>'hotspot','name'=>'Hotspot (Voucher)'],['id'=>'static','name'=>'Static IP']]" option-label="name" option-value="id" />
-            
-            <x-input label="Jatuh Tempo (Tgl)" wire:model="due_date" type="number" min="1" max="31" suffix="Setiap Bulan" />
-
             <!-- Technician/Credentials -->
             @if($connection_type === 'pppoe')
-                <div class="col-span-1 md:col-span-2 bg-blue-50 p-3 rounded-lg border border-blue-100 mt-2">
+                <div class="col-span-1 md:col-span-3 bg-blue-50 p-3 rounded-lg border border-blue-100 mt-2">
                     <span class="text-xs font-bold text-blue-800 uppercase block mb-2">Kredensial PPPoE (Disinkronkan ke Radius/Mikrotik)</span>
                     <div class="grid grid-cols-2 gap-3">
                         <x-input label="Username PPPoE" wire:model="pppoe_user" icon="o-user" />
