@@ -13,28 +13,30 @@ class MikrotikService
      */
     public function kickUser(Router $router, string $username): bool
     {
-        // ... (existing implementation)
         Log::info("Mikrotik: Kicking user {$username} from router {$router->name} ({$router->ip_address})");
 
         try {
-            $client = new \RouterOS\Client([
+            $config = new \RouterOS\Config([
                 'host' => $router->ip_address,
                 'user' => $router->username,
                 'pass' => $router->password,
                 'port' => $router->port ?? 8728,
             ]);
+            $client = new \RouterOS\Client($config);
 
-            $request = new \RouterOS\Request('/ppp/active/print');
-            $request->setQuery(\RouterOS\Query::where('name', $username));
-            $responses = $client->sendSync($request);
+            $query = (new \RouterOS\Query('/ppp/active/print'))
+                ->where('name', $username);
+            
+            $responses = $client->query($query)->read();
 
             foreach ($responses as $response) {
-                if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
-                    $id = $response->getArgument('.id');
+                if (isset($response['.id'])) {
+                    $id = $response['.id'];
                     
-                    $removeRequest = new \RouterOS\Request('/ppp/active/remove');
-                    $removeRequest->setArgument('.id', $id);
-                    $client->sendSync($removeRequest);
+                    $removeQuery = (new \RouterOS\Query('/ppp/active/remove'))
+                        ->equal('.id', $id);
+                    
+                    $client->query($removeQuery);
                     
                     return true;
                 }
@@ -53,25 +55,25 @@ class MikrotikService
     public function testConnection(string $host, string $user, string $pass, int $port = 8728): ?array
     {
         try {
-            $client = new \RouterOS\Client([
+            $config = new \RouterOS\Config([
                 'host' => $host,
                 'user' => $user,
                 'pass' => $pass,
                 'port' => $port,
             ]);
+            $client = new \RouterOS\Client($config);
 
-            $request = new \RouterOS\Request('/system/resource/print');
-            $responses = $client->sendSync($request);
+            $query = new \RouterOS\Query('/system/resource/print');
+            $responses = $client->query($query)->read();
 
-            foreach ($responses as $response) {
-                if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
-                    return [
-                        'board-name' => $response->getArgument('board-name'),
-                        'version'    => $response->getArgument('version'),
-                        'cpu-load'   => $response->getArgument('cpu-load'),
-                        'uptime'     => $response->getArgument('uptime'),
-                    ];
-                }
+            if (!empty($responses) && isset($responses[0])) {
+                $response = $responses[0];
+                return [
+                    'board-name' => $response['board-name'] ?? '-',
+                    'version'    => $response['version'] ?? '-',
+                    'cpu-load'   => $response['cpu-load'] ?? 0,
+                    'uptime'     => $response['uptime'] ?? '-',
+                ];
             }
         } catch (Exception $e) {
             Log::error("Mikrotik Connection Test Failed: " . $e->getMessage());

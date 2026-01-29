@@ -26,26 +26,26 @@ class TrafficService
 
         /* Real Implementation Logic:
         try {
-            $client = new \RouterOS\Client([
+            $config = new \RouterOS\Config([
                 'host' => $router->ip_address,
                 'user' => $router->username,
                 'pass' => $router->password,
                 'port' => $router->port ?? 8728,
             ]);
+            $client = new \RouterOS\Client($config);
 
-            $request = new \RouterOS\Request('/interface/monitor-traffic');
-            $request->setArgument('interface', $interface);
-            $request->setArgument('once', '');
+            $query = (new \RouterOS\Query('/interface/monitor-traffic'))
+                ->equal('interface', $interface)
+                ->equal('once');
 
-            $responses = $client->sendSync($request);
+            $responses = $client->query($query)->read();
             
-            foreach ($responses as $response) {
-                if ($response->getType() === \RouterOS\Response::TYPE_DATA) {
-                    return [
-                        'rx' => (int) $response->getArgument('rx-bits-per-second'),
-                        'tx' => (int) $response->getArgument('tx-bits-per-second'),
-                    ];
-                }
+            if (!empty($responses) && isset($responses[0])) {
+                $response = $responses[0];
+                return [
+                    'rx' => (int) ($response['rx-bits-per-second'] ?? 0),
+                    'tx' => (int) ($response['tx-bits-per-second'] ?? 0),
+                ];
             }
         } catch (Exception $e) {
             Log::error("Traffic Monitor Failed: " . $e->getMessage());
