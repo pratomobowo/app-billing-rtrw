@@ -33,11 +33,11 @@ class Traffic extends Component
         // Keep last 20 points
         $now = now()->format('H:i:s');
         
-        $this->dispatch('traffic-update', [
-            'label' => $now,
-            'rx' => $traffic['rx'],
-            'tx' => $traffic['tx']
-        ]);
+        $this->dispatch('traffic-update', 
+            label: $now,
+            rx: (int)$traffic['rx'],
+            tx: (int)$traffic['tx']
+        );
     }
 
     public function render(TrafficService $service)

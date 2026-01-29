@@ -111,11 +111,24 @@
         });
 
         // Listen for updates from Livewire
-        $wire.on('traffic-update', (raw) => {
+        $wire.on('traffic-update', (event) => {
+            // Livewire 3 dispatches named args as an object in the first argument
+            const raw = event;
+            
+            if (!raw || raw.rx === undefined) {
+                console.warn('Traffic update received but data is incomplete:', raw);
+                return;
+            }
+
+            // Convert to numbers explicitly
+            const rx = Number(raw.rx) || 0;
+            const tx = Number(raw.tx) || 0;
+            const label = raw.label || '';
+
             // Add new data
-            trafficChart.data.labels.push(raw.label);
-            trafficChart.data.datasets[0].data.push(raw.rx);
-            trafficChart.data.datasets[1].data.push(raw.tx);
+            trafficChart.data.labels.push(label);
+            trafficChart.data.datasets[0].data.push(rx);
+            trafficChart.data.datasets[1].data.push(tx);
 
             // Keep max 20 points
             if (trafficChart.data.labels.length > 20) {
@@ -127,8 +140,8 @@
             trafficChart.update();
 
             // Update Text Stats
-            document.getElementById('currentRx').innerText = (raw.rx / 1000000).toFixed(2) + ' Mbps';
-            document.getElementById('currentTx').innerText = (raw.tx / 1000000).toFixed(2) + ' Mbps';
+            document.getElementById('currentRx').innerText = (rx / 1000000).toFixed(2) + ' Mbps';
+            document.getElementById('currentTx').innerText = (tx / 1000000).toFixed(2) + ' Mbps';
         });
     </script>
     @endscript

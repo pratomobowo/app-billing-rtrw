@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Router;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class TrafficService
@@ -29,6 +30,8 @@ class TrafficService
 
             $responses = $client->query($query)->read();
             
+            Log::info("Mikrotik Traffic Response for {$interface}:", ['response' => $responses]);
+
             if (!empty($responses) && isset($responses[0])) {
                 $response = $responses[0];
                 return [
@@ -59,6 +62,8 @@ class TrafficService
 
             $query = new \RouterOS\Query('/interface/print');
             $responses = $client->query($query)->read();
+
+            Log::info("Mikrotik Interfaces Response:", ['response' => $responses]);
 
             $interfaces = [];
             foreach ($responses as $response) {
