@@ -137,11 +137,16 @@
                 trafficChart.data.datasets[1].data.shift();
             }
 
-            trafficChart.update();
+            if (trafficChart) {
+                trafficChart.update();
+            }
 
             // Update Text Stats
-            document.getElementById('currentRx').innerText = (rx / 1000000).toFixed(2) + ' Mbps';
-            document.getElementById('currentTx').innerText = (tx / 1000000).toFixed(2) + ' Mbps';
+            const rxEl = document.getElementById('currentRx');
+            const txEl = document.getElementById('currentTx');
+            
+            if (rxEl) rxEl.innerText = (rx / 1000000).toFixed(2) + ' Mbps';
+            if (txEl) txEl.innerText = (tx / 1000000).toFixed(2) + ' Mbps';
         });
     </script>
     @endscript
