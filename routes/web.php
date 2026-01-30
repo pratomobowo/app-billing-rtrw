@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     // Setting Routes
     Route::get('/settings', App\Livewire\Settings\Index::class);
     Route::get('/settings/application', App\Livewire\Settings\Application::class);
+    Route::get('/settings/network', App\Livewire\Settings\Network::class);
     Route::get('/settings/payment', App\Livewire\Settings\Payment::class);
     Route::get('/settings/docs', App\Livewire\Settings\Documentation::class);
 });

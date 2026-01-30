@@ -18,9 +18,14 @@ class RadiusService
      */
     public function syncUser(string $username, string $password, string $groupName): bool
     {
+        Log::info("Radius: Syncing user {$username} to group {$groupName}");
         DB::beginTransaction();
         try {
             // 1. Set Password (Cleartext-Password)
+            // Redact password in logs for security
+            $redactedPass = substr($password, 0, 1) . str_repeat('*', strlen($password) - 1);
+            Log::debug("Radius: Setting password [{$redactedPass}] for {$username}");
+
             RadCheck::updateOrCreate(
                 ['username' => $username, 'attribute' => 'Cleartext-Password'],
                 ['op' => ':=', 'value' => $password]
@@ -36,7 +41,7 @@ class RadiusService
             return true;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error("Radius Sync User Failed: " . $e->getMessage());
+            Log::error("Radius Sync User Failed for {$username}: " . $e->getMessage());
             return false;
         }
     }
@@ -46,16 +51,21 @@ class RadiusService
      */
     public function syncGroup(string $groupName, string $bandwidthLimit): bool
     {
+        Log::info("Radius: Syncing group {$groupName} with limit {$bandwidthLimit}");
+        
+        // Sanitize limit (no spaces)
+        $cleanedLimit = str_replace(' ', '', $bandwidthLimit);
+
         try {
             // Set Mikrotik-Rate-Limit in radgroupreply
             RadGroupReply::updateOrCreate(
                 ['groupname' => $groupName, 'attribute' => 'Mikrotik-Rate-Limit'],
-                ['op' => ':=', 'value' => $bandwidthLimit]
+                ['op' => ':=', 'value' => $cleanedLimit]
             );
 
             return true;
         } catch (Exception $e) {
-            Log::error("Radius Sync Group Failed: " . $e->getMessage());
+            Log::error("Radius Sync Group Failed for {$groupName}: " . $e->getMessage());
             return false;
         }
     }
@@ -65,12 +75,14 @@ class RadiusService
      */
     public function deleteUser(string $username): bool
     {
+        Log::info("Radius: Deleting user {$username}");
         try {
             RadCheck::where('username', $username)->delete();
             RadReply::where('username', $username)->delete();
             RadUserGroup::where('username', $username)->delete();
             return true;
         } catch (Exception $e) {
+            Log::error("Radius Delete User Failed for {$username}: " . $e->getMessage());
             return false;
         }
     }
@@ -80,6 +92,7 @@ class RadiusService
      */
     public function setUserStatus(string $username, string $status, string $activeGroup): bool
     {
+        Log::info("Radius: Setting status [{$status}] for user {$username}");
         try {
             $isolatedGroup = Setting::getValue('radius_isolated_group', 'ISOLATED');
             $groupName = ($status === 'isolated') ? $isolatedGroup : $activeGroup;
@@ -93,6 +106,7 @@ class RadiusService
 
             return true;
         } catch (Exception $e) {
+            Log::error("Radius Set User Status Failed for {$username}: " . $e->getMessage());
             return false;
         }
     }
