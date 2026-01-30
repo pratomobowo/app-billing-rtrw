@@ -240,15 +240,22 @@ class MikrotikService
     {
         try {
             $client = $this->getClient($router);
-            $query = (new \RouterOS\Query('/log/print'))
-                ->tag('count', (string) $limit);
             
-            // Sort by ID descending to get newest first
-            $query->order('.id', 'desc');
+            // Note: The library doesn't support ->order() or ->tag()
+            // We fetch the logs and reverse them in PHP if needed
+            $query = (new \RouterOS\Query('/log/print'))
+                ->equal('.range', "0-$limit"); // Using range to limit results
 
             $responses = $client->query($query)->read();
             
             $logs = [];
+            
+            // Check for trap
+            if (isset($responses['!trap'])) {
+                Log::error("Mikrotik Log API Error: " . json_encode($responses));
+                return [];
+            }
+
             foreach ($responses as $response) {
                 $logs[] = [
                     'time'    => $response['time'] ?? '-',
@@ -256,7 +263,9 @@ class MikrotikService
                     'message' => $response['message'] ?? '-',
                 ];
             }
-            return $logs;
+
+            // Reverse to get newest first
+            return array_reverse($logs);
         } catch (Exception $e) {
             Log::error("Mikrotik Get Logs Failed for {$router->name}: " . $e->getMessage());
             return [];
