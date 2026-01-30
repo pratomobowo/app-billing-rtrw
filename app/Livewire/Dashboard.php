@@ -46,9 +46,18 @@ class Dashboard extends Component
         foreach ($routers as $router) {
             $isOnline = false;
             try {
-                // Quick check for connectivity
-                $isOnline = (bool) \Illuminate\Support\Facades\Http::timeout(1)->get("http://{$router->host}")->successful() || 
-                           @fsockopen($router->host, $router->port, $errno, $errstr, 1);
+                // Quick check for connectivity: Try API port first, then HTTP
+                $socket = @fsockopen($router->ip_address, $router->port ?? 8728, $errno, $errstr, 1);
+                if ($socket) {
+                    $isOnline = true;
+                    fclose($socket);
+                } else {
+                    // Fallback to HTTP check if API port is closed/filtered but web is open
+                    $isOnline = (bool) \Illuminate\Support\Facades\Http::timeout(1)->get("http://{$router->ip_address}")->successful();
+                }
+                
+                // If real-time check fails, we might want to respect the stored status 
+                // but let's stick to real-time for the "Smart" feel, just fixed.
             } catch (\Exception $e) {}
             
             if ($isOnline) $onlineRouters++;
