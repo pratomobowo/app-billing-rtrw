@@ -119,7 +119,7 @@
             </div>
 
             <!-- Keuangan Dropdown -->
-            <div x-data="{ open: {{ request()->is('billing*', 'invoices*') ? 'true' : 'false' }} }">
+            <div x-data="{ open: {{ request()->is('billing*', 'invoices*', 'finance*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">payments</span>
@@ -133,6 +133,12 @@
                     </a>
                     <a href="/invoices" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('invoices*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">receipt_long</span> Riwayat Invoice
+                    </a>
+                    <a href="/finance/expenses" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/expenses*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">shopping_cart</span> Pengeluaran
+                    </a>
+                    <a href="/finance/profit-loss" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/profit-loss*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">query_stats</span> Laba Rugi
                     </a>
                 </div>
             </div>

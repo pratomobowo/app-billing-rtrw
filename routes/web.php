@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/monitoring/logs', \App\Livewire\Monitoring\Logs::class);
     Route::get('/hotspot/vouchers', \App\Livewire\Hotspot\VoucherGenerator::class);
     Route::get('/hotspot/profiles', \App\Livewire\Hotspot\VoucherProfiles::class);
+    Route::get('/finance/expenses', \App\Livewire\Finance\Expenses::class);
+    Route::get('/finance/profit-loss', \App\Livewire\Finance\ProfitLoss::class);
     Route::get('/network/map', \App\Livewire\Network\Map::class);
     Route::get('/network/olt', \App\Livewire\Network\Olt\Index::class);
     Route::get('/whatsapp', \App\Livewire\Whatsapp\Index::class);
