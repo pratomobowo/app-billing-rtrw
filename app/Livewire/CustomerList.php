@@ -111,10 +111,14 @@ class CustomerList extends Component
             $package = Package::find($this->package_id);
             if ($package) {
                 // 1. Sync User Credentials
-                $radiusService->syncUser($this->pppoe_user, $this->pppoe_pass, $package->name);
+                if (!$radiusService->syncUser($this->pppoe_user, $this->pppoe_pass, $package->name)) {
+                    $this->warning('Gagal sinkron data login ke Radius', position: 'toast-bottom');
+                }
                 
                 // 2. Sync Status (Isolated vs Active)
-                $radiusService->setUserStatus($this->pppoe_user, $this->status, $package->name);
+                if (!$radiusService->setUserStatus($this->pppoe_user, $this->status, $package->name)) {
+                    $this->warning('Gagal sinkron status ke Radius', position: 'toast-bottom');
+                }
 
                 // 3. Sync to Router local PPP
                 $router = Router::find($this->router_id);
@@ -123,19 +127,25 @@ class CustomerList extends Component
                     $isolatedGroup = Setting::getValue('radius_isolated_group', 'ISOLATED');
                     $profile = ($this->status === 'isolated') ? $isolatedGroup : $package->name;
 
-                    $mikrotikService->syncPppoeUser(
+                    if (!$mikrotikService->syncPppoeUser(
                         $router,
                         $this->pppoe_user,
                         $this->pppoe_pass,
                         $profile,
                         "Customer: " . $this->name
-                    );
+                    )) {
+                        $this->error("Gagal sinkron ke Mikrotik {$router->name}", position: 'toast-bottom');
+                    }
 
                     // 4. Kick if status changed to apply immediately
                     if (!$isNew && $oldStatus !== $this->status) {
                         $mikrotikService->kickUser($router, $this->pppoe_user);
                     }
+                } else {
+                    $this->warning('Router tidak ditemukan untuk sinkronisasi', position: 'toast-bottom');
                 }
+            } else {
+                $this->error('Paket tidak ditemukan', position: 'toast-bottom');
             }
         }
 
