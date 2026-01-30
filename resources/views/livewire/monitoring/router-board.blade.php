@@ -132,7 +132,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($logs as $log)
+                    @forelse($paginatedLogs as $log)
                         <tr class="hover:bg-slate-50 transition-colors group">
                             <td class="px-6 py-3 text-xs text-slate-500 font-mono">
                                 {{ $log['time'] }}
@@ -155,6 +155,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50">
+            {{ $paginatedLogs->links() }}
         </div>
     </div>
 
