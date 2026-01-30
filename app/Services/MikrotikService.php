@@ -66,13 +66,18 @@ class MikrotikService
             ];
 
             if (empty($responses)) {
-                Log::info("Mikrotik: Creating new PPP secret for {$username}");
+                Log::info("Mikrotik: Creating new PPP secret for {$username} with profile {$profile}");
                 // Create
                 $addQuery = new \RouterOS\Query('/ppp/secret/add');
                 foreach ($params as $key => $value) {
                     $addQuery->equal($key, $value);
                 }
-                $client->query($addQuery)->read();
+                $response = $client->query($addQuery)->read();
+                
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik API Error (Add User): " . json_encode($response));
+                    return false;
+                }
             } else {
                 Log::info("Mikrotik: Updating existing PPP secret for {$username}");
                 // Update
@@ -82,11 +87,16 @@ class MikrotikService
                 foreach ($params as $key => $value) {
                     $setQuery->equal($key, $value);
                 }
-                $client->query($setQuery)->read();
+                $response = $client->query($setQuery)->read();
+
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik API Error (Set User): " . json_encode($response));
+                    return false;
+                }
             }
             return true;
         } catch (Exception $e) {
-            Log::error("Mikrotik PPPoE Sync Failed for {$username} on {$router->ip_address}: " . $e->getMessage());
+            Log::error("Mikrotik PPPoE Sync Exception for {$username} on {$router->ip_address}: " . $e->getMessage());
             return false;
         }
     }
@@ -121,7 +131,11 @@ class MikrotikService
      */
     public function syncPppoeProfile(Router $router, string $name, string $rateLimit): bool
     {
-        Log::info("Mikrotik: Syncing PPP Profile {$name} to router {$router->name} ({$router->ip_address})");
+        Log::info("Mikrotik: Syncing PPP Profile {$name} to router {$router->name} ({$router->ip_address}) with limit {$rateLimit}");
+        
+        // Basic cleaning of rate-limit: replace space with nothing, e.g. "10M / 10M" -> "10M/10M"
+        $cleanedLimit = str_replace(' ', '', $rateLimit);
+        
         try {
             $client = $this->getClient($router);
             
@@ -132,7 +146,7 @@ class MikrotikService
 
             $params = [
                 'name'       => $name,
-                'rate-limit' => $rateLimit,
+                'rate-limit' => $cleanedLimit,
             ];
 
             if (empty($responses)) {
@@ -142,7 +156,12 @@ class MikrotikService
                 foreach ($params as $key => $value) {
                     $addQuery->equal($key, $value);
                 }
-                $client->query($addQuery)->read();
+                $response = $client->query($addQuery)->read();
+
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik API Error (Add Profile): " . json_encode($response));
+                    return false;
+                }
             } else {
                 Log::info("Mikrotik: Updating existing PPP profile {$name}");
                 // Update
@@ -152,11 +171,16 @@ class MikrotikService
                 foreach ($params as $key => $value) {
                     $setQuery->equal($key, $value);
                 }
-                $client->query($setQuery)->read();
+                $response = $client->query($setQuery)->read();
+
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik API Error (Set Profile): " . json_encode($response));
+                    return false;
+                }
             }
             return true;
         } catch (Exception $e) {
-            Log::error("Mikrotik PPPoE Profile Sync Failed for {$name} on {$router->ip_address}: " . $e->getMessage());
+            Log::error("Mikrotik PPPoE Profile Sync Exception for {$name} on {$router->ip_address}: " . $e->getMessage());
             return false;
         }
     }
