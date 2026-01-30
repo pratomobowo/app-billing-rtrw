@@ -234,6 +234,36 @@ class MikrotikService
     }
 
     /**
+     * Get system logs from Mikrotik.
+     */
+    public function getLogs(Router $router, int $limit = 50): array
+    {
+        try {
+            $client = $this->getClient($router);
+            $query = (new \RouterOS\Query('/log/print'))
+                ->tag('count', (string) $limit);
+            
+            // Sort by ID descending to get newest first
+            $query->order('.id', 'desc');
+
+            $responses = $client->query($query)->read();
+            
+            $logs = [];
+            foreach ($responses as $response) {
+                $logs[] = [
+                    'time'    => $response['time'] ?? '-',
+                    'topics'  => $response['topics'] ?? '-',
+                    'message' => $response['message'] ?? '-',
+                ];
+            }
+            return $logs;
+        } catch (Exception $e) {
+            Log::error("Mikrotik Get Logs Failed for {$router->name}: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Check if a string is a valid Mikrotik name (alphanumeric + some symbols).
      */
     public function isValidMikrotikName(string $name): bool
