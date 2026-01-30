@@ -48,6 +48,7 @@ class MikrotikService
      */
     public function syncPppoeUser(Router $router, string $username, string $password, string $profile, string $comment = ''): bool
     {
+        Log::info("Mikrotik: Syncing PPPoE user {$username} to router {$router->name} ({$router->ip_address}:{$router->port})");
         try {
             $client = $this->getClient($router);
             
@@ -65,6 +66,7 @@ class MikrotikService
             ];
 
             if (empty($responses)) {
+                Log::info("Mikrotik: Creating new PPP secret for {$username}");
                 // Create
                 $addQuery = new \RouterOS\Query('/ppp/secret/add');
                 foreach ($params as $key => $value) {
@@ -72,6 +74,7 @@ class MikrotikService
                 }
                 $client->query($addQuery)->read();
             } else {
+                Log::info("Mikrotik: Updating existing PPP secret for {$username}");
                 // Update
                 $id = $responses[0]['.id'];
                 $setQuery = new \RouterOS\Query('/ppp/secret/set');
@@ -83,7 +86,7 @@ class MikrotikService
             }
             return true;
         } catch (Exception $e) {
-            Log::error("Mikrotik PPPoE Sync Failed: " . $e->getMessage());
+            Log::error("Mikrotik PPPoE Sync Failed for {$username} on {$router->ip_address}: " . $e->getMessage());
             return false;
         }
     }
@@ -118,6 +121,7 @@ class MikrotikService
      */
     public function syncPppoeProfile(Router $router, string $name, string $rateLimit): bool
     {
+        Log::info("Mikrotik: Syncing PPP Profile {$name} to router {$router->name} ({$router->ip_address})");
         try {
             $client = $this->getClient($router);
             
@@ -132,6 +136,7 @@ class MikrotikService
             ];
 
             if (empty($responses)) {
+                Log::info("Mikrotik: Creating new PPP profile {$name}");
                 // Create
                 $addQuery = new \RouterOS\Query('/ppp/profile/add');
                 foreach ($params as $key => $value) {
@@ -139,6 +144,7 @@ class MikrotikService
                 }
                 $client->query($addQuery)->read();
             } else {
+                Log::info("Mikrotik: Updating existing PPP profile {$name}");
                 // Update
                 $id = $responses[0]['.id'];
                 $setQuery = new \RouterOS\Query('/ppp/profile/set');
@@ -150,7 +156,7 @@ class MikrotikService
             }
             return true;
         } catch (Exception $e) {
-            Log::error("Mikrotik PPPoE Profile Sync Failed: " . $e->getMessage());
+            Log::error("Mikrotik PPPoE Profile Sync Failed for {$name} on {$router->ip_address}: " . $e->getMessage());
             return false;
         }
     }
