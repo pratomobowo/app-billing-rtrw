@@ -4,6 +4,7 @@ namespace App\Livewire\Monitoring;
 
 use App\Models\Router;
 use App\Services\MikrotikService;
+use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 use Illuminate\Pagination\LengthAwarePaginator;
