@@ -72,7 +72,7 @@ class RouterBoard extends Component
             $logs->count(),
             $this->perPage,
             $this->getPage(),
-            ['path' => route('generated::CzMCRV6jYfrHUjaN')] // Placeholder, Livewire handles this
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
         );
 
         return view('livewire.monitoring.router-board', [
