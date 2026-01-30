@@ -234,6 +234,37 @@ class MikrotikService
     }
 
     /**
+     * Get detailed system resources from Mikrotik.
+     */
+    public function getSystemResource(Router $router): ?array
+    {
+        try {
+            $client = $this->getClient($router);
+            $query = new \RouterOS\Query('/system/resource/print');
+            $responses = $client->query($query)->read();
+
+            if (!empty($responses) && isset($responses[0])) {
+                $res = $responses[0];
+                return [
+                    'uptime' => $res['uptime'] ?? '-',
+                    'version' => $res['version'] ?? '-',
+                    'board_name' => $res['board-name'] ?? '-',
+                    'cpu_load' => (int) ($res['cpu-load'] ?? 0),
+                    'free_memory' => (int) ($res['free-memory'] ?? 0),
+                    'total_memory' => (int) ($res['total-memory'] ?? 0),
+                    'free_hdd' => (int) ($res['free-hdd-space'] ?? 0),
+                    'total_hdd' => (int) ($res['total-hdd-space'] ?? 0),
+                    'cpu_count' => $res['cpu-count'] ?? 1,
+                    'architecture' => $res['architecture-name'] ?? '-',
+                ];
+            }
+        } catch (Exception $e) {
+            Log::error("Mikrotik Get Resource Failed for {$router->name}: " . $e->getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Get system logs from Mikrotik.
      */
     public function getLogs(Router $router, int $limit = 50): array

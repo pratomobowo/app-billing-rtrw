@@ -66,7 +66,7 @@
             </a>
 
             <!-- Layanan Dropdown -->
-            <div x-data="{ open: {{ request()->is('packages*', 'routers*', 'radius*', 'monitoring/traffic*', 'monitoring/logs*', 'network/map*', 'network/olt*') ? 'true' : 'false' }} }">
+            <div x-data="{ open: {{ request()->is('packages*', 'routers*', 'radius*', 'monitoring/traffic*', 'monitoring/status*', 'network/map*', 'network/olt*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">wifi_tethering</span>
@@ -87,8 +87,8 @@
                     <a href="/monitoring/traffic" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/traffic*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">ssid_chart</span> Traffic Monitor
                     </a>
-                    <a href="/monitoring/logs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/logs*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">history</span> Log Mikrotik
+                    <a href="/monitoring/status" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/status*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">router</span> Status & Log Router
                     </a>
                     <a href="/network/map" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/map*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">map</span> Peta Sebaran

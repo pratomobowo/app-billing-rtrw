@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/routers', RouterIndex::class);
     Route::get('/radius', RadiusIndex::class);
     Route::get('/monitoring/traffic', \App\Livewire\Monitoring\Traffic::class);
-    Route::get('/monitoring/logs', \App\Livewire\Monitoring\Logs::class);
+    Route::get('/monitoring/status', \App\Livewire\Monitoring\RouterBoard::class);
     Route::get('/hotspot/vouchers', \App\Livewire\Hotspot\VoucherGenerator::class);
     Route::get('/hotspot/profiles', \App\Livewire\Hotspot\VoucherProfiles::class);
     Route::get('/finance/expenses', \App\Livewire\Finance\Expenses::class);
