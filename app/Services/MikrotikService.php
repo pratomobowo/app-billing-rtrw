@@ -49,6 +49,12 @@ class MikrotikService
     public function syncPppoeUser(Router $router, string $username, string $password, string $profile, string $comment = ''): bool
     {
         Log::info("Mikrotik: Syncing PPPoE user {$username} to router {$router->name} ({$router->ip_address}:{$router->port})");
+        
+        if (!$this->isValidMikrotikName($username)) {
+            Log::error("Mikrotik: Invalid username '{$username}'. Only alphanumeric and . @ _ - are allowed.");
+            return false;
+        }
+
         try {
             $client = $this->getClient($router);
             
@@ -96,7 +102,10 @@ class MikrotikService
             }
             return true;
         } catch (Exception $e) {
-            Log::error("Mikrotik PPPoE Sync Exception for {$username} on {$router->ip_address}: " . $e->getMessage());
+            Log::error("Mikrotik PPPoE Sync Exception for {$username} on {$router->name} ({$router->ip_address}): " . $e->getMessage(), [
+                'exception' => $e,
+                'router_id' => $router->id
+            ]);
             return false;
         }
     }
@@ -133,6 +142,11 @@ class MikrotikService
     {
         Log::info("Mikrotik: Syncing PPP Profile {$name} to router {$router->name} ({$router->ip_address}) with limit {$rateLimit}");
         
+        if (!$this->isValidMikrotikName($name)) {
+            Log::error("Mikrotik: Invalid profile name '{$name}'. Only alphanumeric and . @ _ - are allowed.");
+            return false;
+        }
+
         // Basic cleaning of rate-limit: replace space with nothing, e.g. "10M / 10M" -> "10M/10M"
         $cleanedLimit = str_replace(' ', '', $rateLimit);
         
@@ -196,6 +210,7 @@ class MikrotikService
                 'user' => $user,
                 'pass' => $pass,
                 'port' => $port,
+                'timeout' => 5, // Fast timeout for connection test
             ]);
             $client = new \RouterOS\Client($config);
 
@@ -219,16 +234,31 @@ class MikrotikService
     }
 
     /**
+     * Check if a string is a valid Mikrotik name (alphanumeric + some symbols).
+     */
+    public function isValidMikrotikName(string $name): bool
+    {
+        // Allow alphanumeric, dot, at, underscore, hyphen
+        return preg_match('/^[a-zA-Z0-9.@_-]+$/', $name) === 1;
+    }
+
+    /**
      * Helper to get Mikrotik Client.
      */
     protected function getClient(Router $router): \RouterOS\Client
     {
-        $config = new \RouterOS\Config([
-            'host' => $router->ip_address,
-            'user' => $router->username,
-            'pass' => $router->password,
-            'port' => $router->port ?? 8728,
-        ]);
-        return new \RouterOS\Client($config);
+        try {
+            $config = new \RouterOS\Config([
+                'host' => $router->ip_address,
+                'user' => $router->username,
+                'pass' => $router->password,
+                'port' => $router->port ?? 8728,
+                'timeout' => 10, // Default 10s timeout
+            ]);
+            return new \RouterOS\Client($config);
+        } catch (Exception $e) {
+            Log::error("Mikrotik: Failed to initialize client for {$router->name}: " . $e->getMessage());
+            throw $e;
+        }
     }
 }

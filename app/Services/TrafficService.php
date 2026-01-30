@@ -21,6 +21,7 @@ class TrafficService
                 'user' => $router->username,
                 'pass' => $router->password,
                 'port' => $router->port ?? 8728,
+                'timeout' => 5, // 5 seconds timeout
             ]);
             $client = new \RouterOS\Client($config);
 
@@ -57,6 +58,7 @@ class TrafficService
                 'user' => $router->username,
                 'pass' => $router->password,
                 'port' => $router->port ?? 8728,
+                'timeout' => 5, // 5 seconds timeout
             ]);
             $client = new \RouterOS\Client($config);
 
