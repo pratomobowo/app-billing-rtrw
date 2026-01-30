@@ -59,7 +59,11 @@ class VoucherGenerator extends Component
             ]);
 
             // Sync to Mikrotik
-            $service->syncVoucher($voucher);
+            if (!$service->syncVoucher($voucher)) {
+                $this->error("Gagal sinkron voucher {$code} ke Mikrotik", position: 'toast-bottom');
+                // Optional: break; if the first one fails, likely connection issue
+                break;
+            }
         }
 
         $this->success("{$this->count} voucher berhasil di-generate");
@@ -68,7 +72,9 @@ class VoucherGenerator extends Component
 
     public function delete(Voucher $voucher, VoucherService $service)
     {
-        $service->deleteVoucher($voucher);
+        if (!$service->deleteVoucher($voucher)) {
+            $this->warning("Gagal hapus voucher {$voucher->code} di Mikrotik", position: 'toast-bottom');
+        }
         $voucher->delete();
         $this->success('Voucher berhasil dihapus');
     }

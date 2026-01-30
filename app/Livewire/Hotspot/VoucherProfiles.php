@@ -63,7 +63,9 @@ class VoucherProfiles extends Component
         // Sync to all Routers (or we could select routers)
         $routers = Router::all();
         foreach ($routers as $router) {
-            $service->syncProfile($router, $profile);
+            if (!$service->syncProfile($router, $profile)) {
+                $this->error("Gagal sinkron profil ke Mikrotik {$router->name}", position: 'toast-bottom');
+            }
         }
 
         $this->success($this->editingProfile ? 'Profil berhasil diperbarui' : 'Profil berhasil dibuat');
@@ -75,7 +77,9 @@ class VoucherProfiles extends Component
         // Delete from all routers
         $routers = Router::all();
         foreach ($routers as $router) {
-            $service->deleteProfile($router, $profile->name);
+            if (!$service->deleteProfile($router, $profile->name)) {
+                $this->warning("Gagal hapus profil di Mikrotik {$router->name}", position: 'toast-bottom');
+            }
         }
 
         $profile->delete();

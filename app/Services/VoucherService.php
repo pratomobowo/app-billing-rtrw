@@ -15,6 +15,11 @@ class VoucherService
      */
     public function syncProfile(Router $router, VoucherProfile $profile): bool
     {
+        Log::info("Mikrotik Hotspot: Syncing profile {$profile->name} to router {$router->name} ({$router->ip_address})");
+        
+        // Clean rate-limit
+        $cleanedLimit = str_replace(' ', '', $profile->bandwidth_limit);
+
         try {
             $client = $this->getClient($router);
 
@@ -25,19 +30,25 @@ class VoucherService
 
             $params = [
                 'name' => $profile->name,
-                'rate-limit' => $profile->bandwidth_limit,
+                'rate-limit' => $cleanedLimit,
                 'shared-users' => (string) $profile->shared_users,
                 'status-autorefresh' => '1m',
             ];
 
             if (empty($responses)) {
+                Log::info("Mikrotik Hotspot: Creating new profile {$profile->name}");
                 // Create
                 $addQuery = new \RouterOS\Query('/ip/hotspot/user/profile/add');
                 foreach ($params as $key => $value) {
                     $addQuery->equal($key, $value);
                 }
-                $client->query($addQuery)->read();
+                $response = $client->query($addQuery)->read();
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik Hotspot API Error (Add Profile): " . json_encode($response));
+                    return false;
+                }
             } else {
+                Log::info("Mikrotik Hotspot: Updating existing profile {$profile->name}");
                 // Update
                 $id = $responses[0]['.id'];
                 $setQuery = new \RouterOS\Query('/ip/hotspot/user/profile/set');
@@ -45,12 +56,16 @@ class VoucherService
                 foreach ($params as $key => $value) {
                     $setQuery->equal($key, $value);
                 }
-                $client->query($setQuery)->read();
+                $response = $client->query($setQuery)->read();
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik Hotspot API Error (Set Profile): " . json_encode($response));
+                    return false;
+                }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::error("Voucher Profile Sync Failed: " . $e->getMessage());
+            Log::error("Voucher Profile Sync Exception: " . $e->getMessage());
             return false;
         }
     }
@@ -87,6 +102,8 @@ class VoucherService
         $router = $voucher->router;
         if (!$router) return false;
 
+        Log::info("Mikrotik Hotspot: Syncing voucher {$voucher->code} to router {$router->name}");
+
         try {
             $client = $this->getClient($router);
 
@@ -104,13 +121,19 @@ class VoucherService
             ];
 
             if (empty($responses)) {
+                Log::info("Mikrotik Hotspot: Creating new user {$voucher->code}");
                 // Create
                 $addQuery = new \RouterOS\Query('/ip/hotspot/user/add');
                 foreach ($params as $key => $value) {
                     $addQuery->equal($key, $value);
                 }
-                $client->query($addQuery)->read();
+                $response = $client->query($addQuery)->read();
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik Hotspot API Error (Add User): " . json_encode($response));
+                    return false;
+                }
             } else {
+                Log::info("Mikrotik Hotspot: Updating existing user {$voucher->code}");
                 // Update
                 $id = $responses[0]['.id'];
                 $setQuery = new \RouterOS\Query('/ip/hotspot/user/set');
@@ -118,12 +141,16 @@ class VoucherService
                 foreach ($params as $key => $value) {
                     $setQuery->equal($key, $value);
                 }
-                $client->query($setQuery)->read();
+                $response = $client->query($setQuery)->read();
+                if (isset($response['!trap'])) {
+                    Log::error("Mikrotik Hotspot API Error (Set User): " . json_encode($response));
+                    return false;
+                }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::error("Voucher Sync Failed: " . $e->getMessage());
+            Log::error("Voucher Sync Exception: " . $e->getMessage());
             return false;
         }
     }
