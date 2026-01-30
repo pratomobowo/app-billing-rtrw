@@ -50,137 +50,168 @@
         </div>
         
         <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-1">
-            <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
-            
-            <!-- Dashboard -->
-            <a href="/" wire:navigate class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group {{ request()->is('/') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-[22px]">dashboard</span>
-                <span class="text-sm font-medium">Dashboard</span>
-            </a>
-
-            <!-- Pelanggan -->
-            <a href="/customers" wire:navigate class="sidebar-link flex items-center gap-3 px-3 py-3 rounded-lg text-slate-300 hover:text-white group {{ request()->is('customers*') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-[22px]">group</span>
-                <span class="text-sm font-medium">Pelanggan</span>
-            </a>
-
-            <!-- Layanan Dropdown -->
-            <div x-data="{ open: {{ request()->is('packages*', 'routers*', 'radius*', 'monitoring/traffic*', 'monitoring/status*', 'network/map*', 'network/olt*') ? 'true' : 'false' }} }">
-                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">wifi_tethering</span>
-                        <span class="text-sm font-medium">Layanan</span>
-                    </div>
-                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
-                </button>
-                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
-                    <a href="/packages" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('packages*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">wifi</span> Paket Internet
-                    </a>
-                    <a href="/routers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('routers*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">router</span> Router Mikrotik
-                    </a>
-                    <a href="/radius" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('radius*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">hub</span> Radius Monitor
-                    </a>
-                    <a href="/monitoring/traffic" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/traffic*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">ssid_chart</span> Traffic Monitor
-                    </a>
-                    <a href="/monitoring/status" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/status*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">router</span> Status & Log Router
-                    </a>
-                    <a href="/network/map" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/map*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">map</span> Peta Sebaran
-                    </a>
-                    <a href="/network/olt" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/olt*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">settings_input_component</span> OLT Management
+        <nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-4">
+            <!-- Section: Utama -->
+            <div>
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Utama</p>
+                <div class="flex flex-col gap-1">
+                    <a href="/" wire:navigate class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group {{ request()->is('/') ? 'active' : '' }}">
+                        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                        <span class="text-sm font-medium">Dashboard</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Hotspot Dropdown -->
-            <div x-data="{ open: {{ request()->is('hotspot*') ? 'true' : 'false' }} }">
-                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">magic_button</span>
-                        <span class="text-sm font-medium">Hotspot</span>
+            <!-- Section: Layanan & CRM -->
+            <div x-data="{ open: {{ request()->is('customers*', 'packages*', 'hotspot*') ? 'true' : 'false' }} }">
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Produk & CRM</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">group</span>
+                            <span class="text-sm font-medium">Pelanggan & Paket</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/customers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('customers*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">person_search</span> Daftar Pelanggan
+                        </a>
+                        <a href="/packages" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('packages*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">wifi</span> Paket Internet
+                        </a>
+                        <a href="/hotspot/vouchers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/vouchers*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">confirmation_number</span> Voucher Hotspot
+                        </a>
+                        <a href="/hotspot/profiles" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/profiles*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">identity_platform</span> Profil Hotspot
+                        </a>
                     </div>
-                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
-                </button>
-                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
-                    <a href="/hotspot/vouchers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/vouchers*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">confirmation_number</span> Voucher Hotspot
-                    </a>
-                    <a href="/hotspot/profiles" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('hotspot/profiles*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">identity_platform</span> Profil Voucher
-                    </a>
                 </div>
             </div>
 
-            <!-- Keuangan Dropdown -->
+            <!-- Section: Keuangan -->
             <div x-data="{ open: {{ request()->is('billing*', 'invoices*', 'finance*') ? 'true' : 'false' }} }">
-                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">payments</span>
-                        <span class="text-sm font-medium">Keuangan</span>
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Keuangan</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">payments</span>
+                            <span class="text-sm font-medium">Billing & Laba</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/billing" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('billing*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span> Penagihan
+                        </a>
+                        <a href="/invoices" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('invoices*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">receipt_long</span> Riwayat Invoice
+                        </a>
+                        <a href="/finance/expenses" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/expenses*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">shopping_cart</span> Pengeluaran
+                        </a>
+                        <a href="/finance/profit-loss" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/profit-loss*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">query_stats</span> Laba Rugi
+                        </a>
                     </div>
-                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
-                </button>
-                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
-                    <a href="/billing" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('billing*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span> Tagihan (Billing)
-                    </a>
-                    <a href="/invoices" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('invoices*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">receipt_long</span> Riwayat Invoice
-                    </a>
-                    <a href="/finance/expenses" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/expenses*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">shopping_cart</span> Pengeluaran
-                    </a>
-                    <a href="/finance/profit-loss" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('finance/profit-loss*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">query_stats</span> Laba Rugi
-                    </a>
                 </div>
             </div>
 
-            <!-- WhatsApp Dropdown -->
+            <!-- Section: Infrastruktur -->
+            <div x-data="{ open: {{ request()->is('routers*', 'radius*', 'network/olt*') ? 'true' : 'false' }} }">
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Infrastruktur</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">lan</span>
+                            <span class="text-sm font-medium">Jaringan & Perangkat</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/routers" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('routers*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">router</span> Router Mikrotik
+                        </a>
+                        <a href="/radius" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('radius*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">hub</span> Radius Monitor
+                        </a>
+                        <a href="/network/olt" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/olt*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">settings_input_component</span> OLT FTTH
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Monitoring -->
+            <div x-data="{ open: {{ request()->is('monitoring*', 'network/map*') ? 'true' : 'false' }} }">
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Monitoring</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">monitoring</span>
+                            <span class="text-sm font-medium">Status & Traffic</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/monitoring/traffic" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/traffic*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">ssid_chart</span> Traffic Monitor
+                        </a>
+                        <a href="/monitoring/status" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('monitoring/status*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">health_and_safety</span> Kesehatan Router
+                        </a>
+                        <a href="/network/map" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/map*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">map</span> Peta Sebaran
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Komunikasi -->
             <div x-data="{ open: {{ request()->is('whatsapp*') ? 'true' : 'false' }} }">
-                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">chat</span>
-                        <span class="text-sm font-medium">WhatsApp</span>
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Komunikasi</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">chat</span>
+                            <span class="text-sm font-medium">WhatsApp Gateway</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/whatsapp" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('whatsapp') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">devices</span> Devices
+                        </a>
+                        <a href="/whatsapp/broadcast" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('whatsapp/broadcast*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">campaign</span> Blast Pesan
+                        </a>
                     </div>
-                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
-                </button>
-                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
-                    <a href="/whatsapp" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('whatsapp') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">devices</span> Device Manager
-                    </a>
-                    <a href="/whatsapp/broadcast" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('whatsapp/broadcast*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">campaign</span> Broadcast
-                    </a>
                 </div>
             </div>
 
-            <!-- Sistem Dropdown -->
+            <!-- Section: Sistem -->
             <div x-data="{ open: {{ request()->is('users*', 'settings*') ? 'true' : 'false' }} }">
-                <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[22px] group-hover:text-white transition-colors">settings_suggest</span>
-                        <span class="text-sm font-medium">Sistem</span>
+                <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 opacity-50">Pengaturan</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:text-white group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">settings_suggest</span>
+                            <span class="text-sm font-medium">Setting & User</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
+                        <a href="/users" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('users*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">manage_accounts</span> Manajemen Staf
+                        </a>
+                        <a href="/settings" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings*') && !request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">settings</span> Konfigurasi App
+                        </a>
+                        <a href="/settings/docs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
+                            <span class="material-symbols-outlined text-[18px]">menu_book</span> Panduan Pengguna
+                        </a>
                     </div>
-                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
-                </button>
-                <div x-show="open" x-collapse class="pl-4 flex flex-col mt-1 space-y-1">
-                    <a href="/users" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('users*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">manage_accounts</span> Manajemen User
-                    </a>
-                    <a href="/settings" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings*') && !request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">settings</span> Konfigurasi
-                    </a>
-                    <a href="/settings/docs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('settings/docs*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">menu_book</span> Dokumentasi
-                    </a>
                 </div>
             </div>
         </nav>
