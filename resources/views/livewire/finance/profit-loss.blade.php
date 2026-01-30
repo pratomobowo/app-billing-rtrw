@@ -45,13 +45,13 @@
         </div>
 
         <!-- Net Profit Card -->
-        <div class="{{ $netProfit >= 0 ? 'bg-primary-600 text-white' : 'bg-red-600 text-white' }} rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden">
-            <div class="absolute right-0 top-0 p-4 opacity-20">
-                <span class="material-symbols-outlined text-6xl">account_balance_wallet</span>
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-6xl {{ $netProfit >= 0 ? 'text-blue-600' : 'text-red-600' }}">account_balance_wallet</span>
             </div>
-            <p class="{{ $netProfit >= 0 ? 'text-primary-100' : 'text-red-100' }} text-sm font-medium uppercase tracking-wider">Laba Bersih (Estimasi)</p>
-            <h3 class="text-3xl font-bold mt-2">Rp {{ number_format($netProfit, 0, ',', '.') }}</h3>
-            <p class="text-xs {{ $netProfit >= 0 ? 'text-primary-200' : 'text-red-200' }} mt-1">Sisa saldo setelah operasional</p>
+            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Laba Bersih (Estimasi)</p>
+            <h3 class="text-3xl font-bold {{ $netProfit >= 0 ? 'text-blue-600' : 'text-red-600' }} mt-2">Rp {{ number_format($netProfit, 0, ',', '.') }}</h3>
+            <p class="text-xs text-slate-400 mt-1">Sisa saldo setelah operasional</p>
         </div>
     </div>
 
