@@ -33,8 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/hotspot/profiles', \App\Livewire\Hotspot\VoucherProfiles::class);
     Route::get('/finance/expenses', \App\Livewire\Finance\Expenses::class);
     Route::get('/finance/profit-loss', \App\Livewire\Finance\ProfitLoss::class);
+    // Network Management
     Route::get('/network/map', \App\Livewire\Network\Map::class);
     Route::get('/network/olt', \App\Livewire\Network\Olt\Index::class);
+    Route::get('/network/infrastructure', \App\Livewire\Network\InfrastructureIndex::class);
     Route::get('/whatsapp', \App\Livewire\Whatsapp\Index::class);
     Route::get('/whatsapp/broadcast', \App\Livewire\Whatsapp\Broadcast::class);
     Route::get('/users', \App\Livewire\Users\Index::class);

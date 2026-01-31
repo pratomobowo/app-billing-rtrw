@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Onu extends Model
+class Odc extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'olt_id',
-        'odp_id',
         'name',
-        'serial_number',
-        'interface',
-        'signal',
-        'odp_port',
-        'last_check',
+        'latitude',
+        'longitude',
+        'description',
     ];
 
     public function olt()
@@ -22,8 +22,8 @@ class Onu extends Model
         return $this->belongsTo(Olt::class);
     }
 
-    public function odp()
+    public function odps()
     {
-        return $this->belongsTo(Odp::class);
+        return $this->hasMany(Odp::class);
     }
 }

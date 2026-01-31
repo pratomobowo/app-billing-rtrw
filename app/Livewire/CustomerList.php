@@ -18,6 +18,8 @@ class CustomerList extends Component
     use WithPagination, Toast;
 
     public string $search = '';
+    public ?int $odp_id = null;
+    public ?int $odp_port = null;
     public bool $customerModal = false;
     public ?Customer $editingCustomer = null;
 
@@ -45,7 +47,7 @@ class CustomerList extends Component
 
     public function create()
     {
-        $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude']);
+        $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'odp_id', 'odp_port', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude']);
         
         // Generate random 6-character password for new customer
         $this->pppoe_pass = Str::random(6);
@@ -99,6 +101,8 @@ class CustomerList extends Component
             'due_date' => $this->due_date,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'odp_id' => $this->odp_id,
+            'odp_port' => $this->odp_port,
         ];
 
         $customer = Customer::updateOrCreate(
@@ -187,6 +191,7 @@ class CustomerList extends Component
             'headers' => $headers,
             'routers' => Router::all(),
             'packages' => Package::all(),
+            'odps' => \App\Models\Odp::all(),
         ]);
     }
 }

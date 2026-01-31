@@ -123,6 +123,9 @@
                     <a href="/radius" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('radius*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">hub</span> Radius Monitor
                     </a>
+                    <a href="/network/infrastructure" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/infrastructure*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">account_tree</span> Manajemen Hub
+                    </a>
                     <a href="/network/olt" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/olt*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">settings_input_component</span> OLT FTTH
                     </a>

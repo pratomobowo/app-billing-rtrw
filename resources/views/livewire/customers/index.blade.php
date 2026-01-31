@@ -122,7 +122,14 @@
             <x-select label="Tipe Koneksi" wire:model="connection_type" :options="[['id'=>'pppoe','name'=>'PPPoE'],['id'=>'hotspot','name'=>'Hotspot (Voucher)'],['id'=>'static','name'=>'Static IP']]" option-label="name" option-value="id" />
 
             <x-input label="Jatuh Tempo (Tgl)" wire:model="due_date" type="number" min="1" max="31" suffix="Setiap Bulan" />
-            <div class="grid grid-cols-2 gap-4">
+            <!-- Physical Connection (ODP) -->
+            <div class="col-span-1 md:col-span-2 mt-2">
+                <h3 class="font-bold text-slate-700 mb-2 border-b pb-1">Lokasi & ODP</h3>
+            </div>
+            <x-select label="Pilih ODP" wire:model="odp_id" :options="$odps" option-label="name" option-value="id" placeholder="-- Pilih ODP --" icon="o-share" />
+            <x-input label="Port ODP" wire:model="odp_port" type="number" placeholder="Nomor Port (1-16)" icon="o-device-phone-mobile" />
+
+            <div class="grid grid-cols-2 gap-4 col-span-1 md:col-span-2">
                 <x-input label="Latitude" wire:model="latitude" placeholder="-6.200000" />
                 <x-input label="Longitude" wire:model="longitude" placeholder="106.816666" />
             </div>
