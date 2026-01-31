@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/network/olt', \App\Livewire\Network\Olt\Index::class);
     Route::get('/network/infrastructure', \App\Livewire\Network\InfrastructureIndex::class);
     Route::get('/network/genieacs', \App\Livewire\Network\GenieAcsIndex::class);
+    Route::get('/network/areas', \App\Livewire\Network\AreaIndex::class);
     Route::get('/whatsapp', \App\Livewire\Whatsapp\Index::class);
     Route::get('/whatsapp/broadcast', \App\Livewire\Whatsapp\Broadcast::class);
     Route::get('/users', \App\Livewire\Users\Index::class);

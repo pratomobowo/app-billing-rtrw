@@ -18,6 +18,7 @@ class CustomerList extends Component
     use WithPagination, Toast;
 
     public string $search = '';
+    public ?int $filter_area_id = null;
     public ?int $odp_id = null;
     public ?int $odp_port = null;
     public bool $customerModal = false;
@@ -26,6 +27,7 @@ class CustomerList extends Component
 
     // Form Fields
     public string $name = '';
+    public ?int $area_id = null;
     public string $whatsapp = '';
     public ?int $router_id = null;
     public ?int $package_id = null;
@@ -50,7 +52,7 @@ class CustomerList extends Component
 
     public function create()
     {
-        $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'odp_id', 'odp_port', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude', 'modem_serial_number', 'modem_model']);
+        $this->reset(['name', 'area_id', 'whatsapp', 'router_id', 'package_id', 'odp_id', 'odp_port', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude', 'modem_serial_number', 'modem_model']);
         
         // Generate random 6-character password for new customer
         $this->pppoe_pass = Str::random(6);
@@ -62,6 +64,7 @@ class CustomerList extends Component
     {
         $this->editingCustomer = $customer;
         $this->name = $customer->name;
+        $this->area_id = $customer->area_id;
         $this->whatsapp = $customer->whatsapp;
         $this->router_id = $customer->router_id;
         $this->package_id = $customer->package_id;
@@ -101,6 +104,7 @@ class CustomerList extends Component
 
         $data = [
             'name' => $this->name,
+            'area_id' => $this->area_id,
             'whatsapp' => $this->whatsapp,
             'router_id' => $this->router_id,
             'package_id' => $this->package_id,
@@ -186,13 +190,14 @@ class CustomerList extends Component
 
     public function render()
     {
-        $customers = Customer::with(['package', 'router'])
+        $customers = Customer::with(['package', 'router', 'area'])
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->filter_area_id, fn($q) => $q->where('area_id', $this->filter_area_id))
             ->paginate(10);
 
         $headers = [
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
-            ['key' => 'name', 'label' => 'Nama Pelanggan'],
+            ['key' => 'name', 'label' => 'Nama/Wilayah'],
             ['key' => 'whatsapp', 'label' => 'WhatsApp'],
             ['key' => 'package.name', 'label' => 'Paket'],
             ['key' => 'router.name', 'label' => 'Router'],
@@ -205,6 +210,7 @@ class CustomerList extends Component
             'routers' => Router::all(),
             'packages' => Package::all(),
             'odps' => \App\Models\Odp::all(),
+            'areas' => \App\Models\Area::all(),
         ]);
     }
 }

@@ -130,7 +130,10 @@
                         <span class="material-symbols-outlined text-[18px]">settings_input_component</span> OLT FTTH
                     </a>
                     <a href="/network/genieacs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/genieacs*') ? 'text-white bg-white/5' : '' }}">
-                        <span class="material-symbols-outlined text-[18px]">cpu_chip</span> Modem TR-069
+                        <span class="material-symbols-outlined text-[18px]">memory</span> Modem TR-069
+                    </a>
+                    <a href="/network/areas" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/areas*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">map</span> Manajemen Wilayah
                     </a>
                 </div>
             </div>

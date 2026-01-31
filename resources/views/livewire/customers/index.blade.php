@@ -6,6 +6,15 @@
         </div>
         <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
              <div class="relative w-full sm:w-auto">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">map</span>
+                <select wire:model.live="filter_area_id" class="pl-10 pr-4 py-2 w-full sm:w-48 rounded-lg bg-white border border-slate-200 text-sm focus:ring-2 focus:ring-primary focus:border-primary text-slate-700 transition-all shadow-sm appearance-none">
+                    <option value="">Semua Wilayah</option>
+                    @foreach($areas as $area)
+                        <option value="{{ $area->id }}">{{ $area->name }}</option>
+                    @endforeach
+                </select>
+             </div>
+             <div class="relative w-full sm:w-auto">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
                 <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari pelanggan..." 
                     class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-lg bg-white border border-slate-200 text-sm focus:ring-2 focus:ring-primary focus:border-primary text-slate-700 transition-all shadow-sm">
@@ -52,7 +61,11 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="font-semibold text-slate-900">{{ $customer->name }}</span>
-                        <span class="text-[11px] text-slate-500">{{ $customer->connection_type }}</span>
+                        @if($customer->area)
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-tighter">{{ $customer->area->name }}</span>
+                        @else
+                            <span class="text-[10px] text-slate-400 italic">No Area</span>
+                        @endif
                     </div>
                 </div>
             @endscope
@@ -105,6 +118,7 @@
                 <h3 class="font-bold text-slate-700 mb-2 border-b pb-1">Data Diri</h3>
             </div>
             <x-input label="Nama Lengkap" wire:model.live="name" placeholder="John Doe" />
+            <x-select label="Wilayah / Area" wire:model="area_id" :options="$areas" option-label="name" option-value="id" placeholder="Pilih Wilayah" icon="o-map" />
             <x-input label="No. WhatsApp" wire:model="whatsapp" placeholder="08123456789" hint="Wajib aktif untuk notifikasi" />
             <div class="col-span-1 md:col-span-2">
                 <x-textarea label="Alamat Pemasangan" wire:model="address" placeholder="Jalan Mawar No. 12..." rows="2" />
