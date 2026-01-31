@@ -108,7 +108,7 @@
             </div>
 
             <!-- Section: Infrastruktur -->
-            <div x-data="{ open: {{ request()->is('routers*', 'radius*', 'network/olt*') ? 'true' : 'false' }} }">
+            <div x-data="{ open: {{ request()->is('routers*', 'radius*', 'network/olt*', 'network/genieacs*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" class="w-full sidebar-link flex items-center justify-between px-3 py-3 rounded-lg text-slate-300 hover:text-white group transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-[20px] group-hover:text-white transition-colors">lan</span>
@@ -128,6 +128,9 @@
                     </a>
                     <a href="/network/olt" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/olt*') ? 'text-white bg-white/5' : '' }}">
                         <span class="material-symbols-outlined text-[18px]">settings_input_component</span> OLT FTTH
+                    </a>
+                    <a href="/network/genieacs" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white text-sm {{ request()->is('network/genieacs*') ? 'text-white bg-white/5' : '' }}">
+                        <span class="material-symbols-outlined text-[18px]">cpu_chip</span> Modem TR-069
                     </a>
                 </div>
             </div>

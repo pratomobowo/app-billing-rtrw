@@ -87,6 +87,9 @@
 
             @scope('actions', $customer)
                 <div class="flex gap-1 justify-end">
+                    @if($customer->modem_serial_number)
+                        <x-button icon="o-cpu-chip" class="btn-sm btn-ghost text-orange-500 hover:bg-orange-50 rounded-lg transition-all" wire:click="openModemControl({{ $customer->id }})" title="Remote Modem (TR-069)" />
+                    @endif
                     <x-button icon="o-pencil" class="btn-sm btn-ghost text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" wire:click="edit({{ $customer->id }})" />
                     <x-button icon="o-trash" class="btn-sm btn-ghost text-slate-400 hover:text-error hover:bg-error/5 rounded-lg transition-all" wire:click="delete({{ $customer->id }})" wire:confirm="Hapus pelanggan & data Radius?" />
                 </div>
@@ -134,6 +137,15 @@
                 <x-input label="Longitude" wire:model="longitude" placeholder="106.816666" />
             </div>
 
+            <!-- Modem TR-069 -->
+            <div class="col-span-1 md:col-span-2 mt-4 bg-orange-50 p-3 rounded-lg border border-orange-100">
+                <span class="text-xs font-bold text-orange-800 uppercase block mb-2">Integrasi Modem (GenieACS TR-069)</span>
+                <div class="grid grid-cols-2 gap-3">
+                    <x-input label="Serial Number Modem" wire:model="modem_serial_number" placeholder="ZTEGC123456" icon="o-cpu-chip" />
+                    <x-input label="Model Modem" wire:model="modem_model" placeholder="F660 V8 / F609" icon="o-cube" />
+                </div>
+            </div>
+
             <!-- Technician/Credentials -->
             @if($connection_type === 'pppoe')
                 <div class="col-span-1 md:col-span-2 bg-blue-50 p-3 rounded-lg border border-blue-100 mt-2">
@@ -151,6 +163,17 @@
         <x-slot:actions>
             <x-button label="Batal" @click="$wire.customerModal = false" />
             <x-button label="Simpan Pelanggan" class="btn-primary" wire:click="save" spinner="save" />
+        </x-slot:actions>
+    </x-modal>
+
+    <!-- Modem Control Modal -->
+    <x-modal wire:model="modemControlModal" title="Remote Management Modem" subtitle="Koneksi TR-069 GenieACS" separator>
+        @if($editingCustomer)
+            <livewire:customers.modem-control :customer="$editingCustomer" :key="'modem-'.$editingCustomer->id" />
+        @endif
+        
+        <x-slot:actions>
+            <x-button label="Tutup" @click="$wire.modemControlModal = false" />
         </x-slot:actions>
     </x-modal>
 </div>

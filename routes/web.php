@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/network/map', \App\Livewire\Network\Map::class);
     Route::get('/network/olt', \App\Livewire\Network\Olt\Index::class);
     Route::get('/network/infrastructure', \App\Livewire\Network\InfrastructureIndex::class);
+    Route::get('/network/genieacs', \App\Livewire\Network\GenieAcsIndex::class);
     Route::get('/whatsapp', \App\Livewire\Whatsapp\Index::class);
     Route::get('/whatsapp/broadcast', \App\Livewire\Whatsapp\Broadcast::class);
     Route::get('/users', \App\Livewire\Users\Index::class);
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', App\Livewire\Settings\Index::class);
     Route::get('/settings/application', App\Livewire\Settings\Application::class);
     Route::get('/settings/network', App\Livewire\Settings\Network::class);
-    Route::get('/settings/payment', App\Livewire\Settings\Payment::class);
-    Route::get('/settings/docs', App\Livewire\Settings\Documentation::class);
+    Route::get('/settings/payment', \App\Livewire\Settings\Payment::class);
+    Route::get('/settings/genieacs', \App\Livewire\Settings\GenieAcs::class);
+    Route::get('/settings/docs', \App\Livewire\Settings\Documentation::class);
 });

@@ -30,5 +30,14 @@
             <h3 class="font-bold text-slate-800 text-lg mb-2">Pembayaran</h3>
             <p class="text-slate-500 text-sm">Metode pembayaran, gateway (Misal: Midtrans), dan biaya admin.</p>
         </a>
+
+        <!-- GenieACS Settings -->
+        <a href="/settings/genieacs" wire:navigate class="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+            <div class="bg-orange-50 p-3 rounded-lg w-fit mb-4 group-hover:bg-orange-100 transition-colors">
+                <span class="material-symbols-outlined text-orange-600 text-3xl">satellite_alt</span>
+            </div>
+            <h3 class="font-bold text-slate-800 text-lg mb-2">GenieACS</h3>
+            <p class="text-slate-500 text-sm">Integrasi TR-069 untuk manajemen modem/ONT secara remote.</p>
+        </a>
     </div>
 </div>

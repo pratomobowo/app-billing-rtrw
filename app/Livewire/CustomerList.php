@@ -21,6 +21,7 @@ class CustomerList extends Component
     public ?int $odp_id = null;
     public ?int $odp_port = null;
     public bool $customerModal = false;
+    public bool $modemControlModal = false;
     public ?Customer $editingCustomer = null;
 
     // Form Fields
@@ -36,6 +37,8 @@ class CustomerList extends Component
     public int $due_date = 20; // Default due date
     public $latitude;
     public $longitude;
+    public ?string $modem_serial_number = null;
+    public ?string $modem_model = null;
 
     public function updatedName($value)
     {
@@ -47,7 +50,7 @@ class CustomerList extends Component
 
     public function create()
     {
-        $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'odp_id', 'odp_port', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude']);
+        $this->reset(['name', 'whatsapp', 'router_id', 'package_id', 'odp_id', 'odp_port', 'address', 'connection_type', 'pppoe_user', 'pppoe_pass', 'status', 'due_date', 'editingCustomer', 'latitude', 'longitude', 'modem_serial_number', 'modem_model']);
         
         // Generate random 6-character password for new customer
         $this->pppoe_pass = Str::random(6);
@@ -70,7 +73,15 @@ class CustomerList extends Component
         $this->due_date = $customer->due_date;
         $this->latitude = $customer->latitude;
         $this->longitude = $customer->longitude;
+        $this->modem_serial_number = $customer->modem_serial_number;
+        $this->modem_model = $customer->modem_model;
         $this->customerModal = true;
+    }
+
+    public function openModemControl(Customer $customer)
+    {
+        $this->editingCustomer = $customer;
+        $this->modemControlModal = true;
     }
 
     public function save(RadiusService $radiusService, MikrotikService $mikrotikService)
@@ -103,6 +114,8 @@ class CustomerList extends Component
             'longitude' => $this->longitude,
             'odp_id' => $this->odp_id,
             'odp_port' => $this->odp_port,
+            'modem_serial_number' => $this->modem_serial_number,
+            'modem_model' => $this->modem_model,
         ];
 
         $customer = Customer::updateOrCreate(
