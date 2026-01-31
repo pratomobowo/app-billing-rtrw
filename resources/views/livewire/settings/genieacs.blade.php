@@ -1,23 +1,27 @@
-<div>
-    <div class="flex items-center gap-2 mb-6 text-slate-400">
-        <a href="/settings" wire:navigate class="hover:text-primary transition-colors">Pengaturan</a>
-        <span class="material-symbols-outlined text-sm">chevron_right</span>
-        <span class="text-slate-800 font-bold">GenieACS (TR-069)</span>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800">GenieACS (TR-069)</h2>
+            <p class="text-sm text-slate-500">Konfigurasi Northbound Interface (NBI) GenieACS</p>
+        </div>
+        <div>
+             <a href="/settings" wire:navigate class="btn btn-ghost btn-sm">
+                <span class="material-symbols-outlined mr-2">arrow_back</span> Kembali
+             </a>
+        </div>
     </div>
 
     <div class="max-w-2xl">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="p-6 md:p-8 border-b border-slate-50">
-                <div class="flex items-center gap-4 mb-2">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 md:p-8">
+                <div class="flex items-center gap-4 mb-6">
                     <div class="size-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
                         <span class="material-symbols-outlined text-2xl">satellite_alt</span>
                     </div>
                     <div>
-                        <h3 class="text-xl font-black text-slate-800">Integrasi GenieACS</h3>
-                        <p class="text-slate-500 text-sm">Konfigurasi Northbound Interface (NBI) GenieACS.</p>
+                        <h3 class="font-bold text-slate-800">Konfigurasi Server</h3>
+                        <p class="text-slate-500 text-xs">Pastikan URL NBI dapat dijangkau oleh server billing.</p>
                     </div>
                 </div>
-            </div>
 
             <div class="p-6 md:p-8">
                 <form wire:submit="save" class="space-y-6">

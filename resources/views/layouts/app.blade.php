@@ -236,14 +236,10 @@
                     <span class="material-symbols-outlined">menu</span>
                 </button>
 
-                @if(($title ?? 'Dashboard') === 'Dashboard')
-                    <div class="flex flex-col justify-center">
-                        <h2 class="text-lg md:text-xl font-bold text-slate-800 leading-tight truncate max-w-[150px] md:max-w-none">{{ $appSettings['company_name'] ?? 'Billing System' }}</h2>
-                        <p class="text-[10px] md:text-xs text-slate-500 truncate max-w-[150px] md:max-w-none">{{ $appSettings['company_address'] ?? '' }}</p>
-                    </div>
-                @else
-                    <h2 class="text-lg md:text-xl font-bold text-slate-800 truncate">{{ $title }}</h2>
-                @endif
+                <div class="flex flex-col justify-center">
+                    <h2 class="text-lg md:text-xl font-bold text-slate-800 leading-tight truncate max-w-[200px] md:max-w-none">{{ $appSettings['company_name'] ?? 'Billing System' }}</h2>
+                    <p class="text-[10px] md:text-xs text-slate-500 truncate max-w-[200px] md:max-w-none">{{ $appSettings['company_address'] ?? '' }}</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-2 md:gap-4">

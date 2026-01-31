@@ -1,8 +1,8 @@
 <div>
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-            <h2 class="text-2xl font-black text-slate-800">Manajemen Infrastruktur</h2>
-            <p class="text-slate-500 font-medium">Kelola OLT, ODC, dan ODP dalam satu tempat.</p>
+            <h2 class="text-2xl font-bold text-slate-800">Manajemen Infrastruktur</h2>
+            <p class="text-sm text-slate-500">Kelola OLT, ODC, dan ODP dalam satu tempat.</p>
         </div>
     </div>
 

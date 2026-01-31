@@ -1,8 +1,8 @@
 <div>
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-            <h3 class="text-xl font-black text-slate-800">Manajemen Wilayah</h3>
-            <p class="text-xs text-slate-500">Kelompokkan pelanggan untuk mempermudah monitoring area.</p>
+            <h2 class="text-2xl font-bold text-slate-800">Manajemen Wilayah</h2>
+            <p class="text-sm text-slate-500">Kelompokkan pelanggan untuk mempermudah monitoring area.</p>
         </div>
         <button wire:click="create" class="btn btn-primary btn-sm rounded-xl">
             <span class="material-symbols-outlined">add</span> Tambah Wilayah
